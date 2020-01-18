@@ -9,10 +9,11 @@ function App() {
 
   const [selectedCustomer, setSelectedCustomer] = useState('');
 
+  
 
   return (
     <div className="App">
-      < Customers setSelectedCustomer={setSelectedCustomer} />
+      < Customers selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} />
     </div>
   );
 }

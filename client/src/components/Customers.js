@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 const { ipcRenderer } = window.require('electron');
 
-const Customers = () => {
+const Customers = (props) => {
     
     const [customers, setCustomers] = useState([]);
 
@@ -17,8 +17,10 @@ const Customers = () => {
     }, [])
 
     const handleClick = (event) => {
-        console.log(event.target.id);
+        props.setSelectedCustomer(event.target.id);
     }
+
+    console.log(props.selectedCustomer)
 
     return (
         <ul>
