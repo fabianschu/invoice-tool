@@ -3,11 +3,14 @@ const { ipcRenderer } = window.require('electron');
 
 const Customers = () => {
     
+    const [customers, setCustomers] = useState([]);
+
     useEffect(() => {
         console.log("hi");
 
         ipcRenderer.on('asynchronous-reply', (event, arg) => {
-            console.log(arg) // prints "pong"
+            console.log(arg);
+            setCustomers(arg);
         }); 
 
         ipcRenderer.send('asynchronous-message', 'retrieve-customers');
@@ -15,8 +18,11 @@ const Customers = () => {
 
     return (
         <ul>
-            <li>customer 1</li>
-            <li>customer 2</li>
+            {customers.map(customer => {
+                return(
+                <li>{customer.firm}</li>
+                )
+            })}
         </ul>
     )
 }

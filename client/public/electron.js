@@ -63,7 +63,6 @@ ipcMain.on('asynchronous-message', (event, arg) => {
         event.sender.send('asynchronous-reply', rows)
     });
   }
-  event.sender.send('asynchronous-reply', 'pong')
 })
 
 
