@@ -45,13 +45,35 @@ var db = new sqlite3.Database(dbPath, (err) => {
 db.serialize(() => {
   console.log("jeha")
   // db.run('DROP TABLE IF EXISTS customers');
-  db.run("CREATE TABLE IF NOT EXISTS customers(firm TEXT, name TEXT, surname TEXT, street TEXT, zip_code INTEGER, city TEXT, country TEXT)");
-  db.run('INSERT INTO customers(firm, name, surname, street, zip_code, city, country) VALUES (?,?,?,?,?,?,?)', ['Hans Sparmeister GmbH', 'Sparmeister', 'Hans', 'Knausergasse 7', 73213, 'Stuttgart', 'Österreich'], (err) => {
-  if (err) {
-    return console.log(err.message)
-  }
-  console.log(`A row has been inserted with rowid ${this.lastID}`);
-  });
+  db.run(`CREATE TABLE IF NOT EXISTS customers(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    firm TEXT, 
+    name TEXT, 
+    surname TEXT, 
+    street TEXT, 
+    zip_code INTEGER, 
+    city TEXT, 
+    country TEXT)`);
+  db.run(`INSERT INTO customers(
+    firm, 
+    name, 
+    surname, 
+    street, 
+    zip_code, 
+    city, 
+    country) 
+  VALUES (?,?,?,?,?,?,?)`, [
+    'Hans Sparmeister GmbH', 
+    'Sparmeister', 
+    'Hans', 
+    'Knausergasse 7', 
+    73213, 
+    'Stuttgart', 
+    'Österreich'], (err) => {
+      if (err) {
+        return console.log(err.message)
+      }
+    });
 });
 
 ipcMain.on('asynchronous-message', (event, arg) => {
@@ -60,6 +82,7 @@ ipcMain.on('asynchronous-message', (event, arg) => {
         if (err) {
             throw err;
         }
+        console.log(rows);
         event.sender.send('asynchronous-reply', rows)
     });
   }

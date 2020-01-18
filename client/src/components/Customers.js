@@ -18,9 +18,9 @@ const Customers = () => {
 
     return (
         <ul>
-            {customers.map(customer => {
+            {customers.map((customer, index) => {
                 return(
-                <li>{customer.firm}</li>
+                <li>{customer.name}</li>
                 )
             })}
         </ul>

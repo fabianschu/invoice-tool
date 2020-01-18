@@ -6,6 +6,8 @@ const CreateCustomer = () => {
         <form>
             <label htmlFor="name">Customer name:</label>
             <input id="name" type="text"/>
+            <label htmlFor="name">Customer name:</label>
+            <input id="name" type="text"/>
         </form>
     )
 }

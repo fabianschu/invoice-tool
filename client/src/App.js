@@ -7,6 +7,8 @@ import Customers from './components/Customers';
 
 function App() {
 
+  const [selectedCountry, setSelectedCountry] = useState('');
+
   return (
     <div className="App">
       < Customers />

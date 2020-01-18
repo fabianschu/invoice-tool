@@ -1,7 +1,7 @@
 var sqlite3 = require('sqlite3').verbose();
 
 const dbPath = './database.db';
-let sql = 'SELECT firm, name, surname, street, zip_code, city, country FROM customers';
+let sql = 'SELECT * FROM customers';
 
 var db = new sqlite3.Database(dbPath, (err) => {
 
