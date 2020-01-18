@@ -10,7 +10,7 @@ const Customers = () => {
             console.log('hiho') // prints "pong"
         }); 
 
-        ipcRenderer.send('asynchronous-message', 'ping');
+        ipcRenderer.send('asynchronous-message', 'papalapa');
     }, [])
 
     return (
