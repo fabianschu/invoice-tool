@@ -7,11 +7,12 @@ import Customers from './components/Customers';
 
 function App() {
 
-  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+
 
   return (
     <div className="App">
-      < Customers />
+      < Customers setSelectedCustomer={setSelectedCustomer} />
     </div>
   );
 }

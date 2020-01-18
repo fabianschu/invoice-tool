@@ -16,11 +16,15 @@ const Customers = () => {
         ipcRenderer.send('asynchronous-message', 'retrieve-customers');
     }, [])
 
+    const handleClick = (event) => {
+        console.log(event.target.id);
+    }
+
     return (
         <ul>
-            {customers.map((customer, index) => {
+            {customers.map((customer) => {
                 return(
-                <li>{customer.name}</li>
+                <li key={customer.id} id={customer.id} onClick={handleClick}>{customer.name}</li>
                 )
             })}
         </ul>
