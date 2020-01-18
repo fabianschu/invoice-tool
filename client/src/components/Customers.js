@@ -7,10 +7,10 @@ const Customers = () => {
         console.log("hi");
 
         ipcRenderer.on('asynchronous-reply', (event, arg) => {
-            console.log('hiho') // prints "pong"
+            console.log(arg) // prints "pong"
         }); 
 
-        ipcRenderer.send('asynchronous-message', 'papalapa');
+        ipcRenderer.send('asynchronous-message', 'retrieve-customers');
     }, [])
 
     return (

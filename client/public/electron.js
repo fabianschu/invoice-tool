@@ -47,16 +47,24 @@ db.serialize(() => {
   // db.run('DROP TABLE IF EXISTS customers');
   db.run("CREATE TABLE IF NOT EXISTS customers(firm TEXT, name TEXT, surname TEXT, street TEXT, zip_code INTEGER, city TEXT, country TEXT)");
   db.run('INSERT INTO customers(firm, name, surname, street, zip_code, city, country) VALUES (?,?,?,?,?,?,?)', ['Hans Sparmeister GmbH', 'Sparmeister', 'Hans', 'Knausergasse 7', 73213, 'Stuttgart', 'Österreich'], (err) => {
-    if (err) {
-      return console.log(err.message)
-    }
-    console.log(`A row has been inserted with rowid ${this.lastID}`);
+  if (err) {
+    return console.log(err.message)
+  }
+  console.log(`A row has been inserted with rowid ${this.lastID}`);
   });
 });
 
 ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log(arg);
-    event.sender.send('asynchronous-reply', 'pong')
+  if (arg === "retrieve-customers") {
+      db.all('SELECT * FROM customers', [], (err, rows) => {
+        if (err) {
+            throw err;
+        }
+        event.sender.send('asynchronous-reply', rows)
+    });
+  }
+  event.sender.send('asynchronous-reply', 'pong')
 })
+
 
 //db.close();
