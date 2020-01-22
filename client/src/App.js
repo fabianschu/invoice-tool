@@ -58,7 +58,7 @@ function App() {
     <div className="App">
       <Customers selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} customers={customers} handleClick={handleClick}/>
 
-      {selectedCustomer !== '' && <CustomerDetails customerDetails={customers.find(el => el.id === selectedCustomer)} handleChange={handleChange} selectedCustomer={selectedCustomer}/>}
+      {selectedCustomer !== '' && <CustomerDetails customerDetails={customers.find(el => el.id === selectedCustomer)} handleChange={handleChange} selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>}
     </div>
   );
 }

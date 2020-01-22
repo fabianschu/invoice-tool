@@ -42,10 +42,14 @@ const CustomerDetails = (props) => {
         
         //if event type is blur, the main process is asked to update the db, it will then query the db again and send the result to the ipcRenderer (but not the event emitter)
         if(event.type === 'blur') {
+            console.log(Number(event.target.id));
             ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, Number(event.target.id)]]);
         }
+    }
 
-        //
+    const handleClick = event => {
+        props.setSelectedCustomer('');
+        ipcRenderer.send('delete', [`DELETE FROM customers WHERE id=?`, [Number(event.target.id)]]);
     }
     
     useEffect(() => {
@@ -64,40 +68,41 @@ const CustomerDetails = (props) => {
     return (
         <>
             {props.selectedCustomer &&
-            <>
-                <table className=''>
-                    <tbody>
-                        <tr>
-                            <th>Firm</th>
-                            <td><input type="text" value={firm} onChange={handleChange} name='firm' onBlur={handleChange} id={id}/></td>
-                        </tr>
-                        <tr>
-                            <th>Street</th>
-                            <td><input type="text" value={street} onChange={handleChange} name='street' onBlur={props.handleChange} id={id}/></td>
-                        </tr>
-                        <tr>
-                            <th>Zip Code</th>
-                            <td><input type="text" value={zip} onChange={handleChange} name='zip' onBlur={props.handleChange} id={id}/></td>
-                        </tr>
-                        <tr>
-                            <th>City</th>
-                            <td><input type="text" value={city} onChange={handleChange} name='city' onBlur={props.handleChange} id={id}/></td>
-                        </tr>
-                        <tr>
-                            <th>Country</th>
-                            <td><input type="text" value={country} onChange={handleChange} name='country' onBlur={props.handleChange} id={id}/></td>
-                        </tr>
-                        <tr>
-                            <th>Surname</th>
-                            <td><input type="text" value={firstName} onChange={handleChange} name='firstName' onBlur={props.handleChange} id={id}/></td>
-                        </tr>
-                        <tr>
-                            <th>Name</th>
-                            <td><input type="text" value={lastName} onChange={handleChange} name='lastName' onBlur={props.handleChange} id={id}/></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </>
+                <>
+                    <table className=''>
+                        <tbody>
+                            <tr>
+                                <th>Firm</th>
+                                <td><input type="text" value={firm} onChange={handleChange} name='firm' onBlur={handleChange} id={id}/></td>
+                            </tr>
+                            <tr>
+                                <th>Street</th>
+                                <td><input type="text" value={street} onChange={handleChange} name='street' onBlur={props.handleChange} id={id}/></td>
+                            </tr>
+                            <tr>
+                                <th>Zip Code</th>
+                                <td><input type="text" value={zip} onChange={handleChange} name='zip' onBlur={props.handleChange} id={id}/></td>
+                            </tr>
+                            <tr>
+                                <th>City</th>
+                                <td><input type="text" value={city} onChange={handleChange} name='city' onBlur={props.handleChange} id={id}/></td>
+                            </tr>
+                            <tr>
+                                <th>Country</th>
+                                <td><input type="text" value={country} onChange={handleChange} name='country' onBlur={props.handleChange} id={id}/></td>
+                            </tr>
+                            <tr>
+                                <th>Surname</th>
+                                <td><input type="text" value={firstName} onChange={handleChange} name='firstName' onBlur={props.handleChange} id={id}/></td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td><input type="text" value={lastName} onChange={handleChange} name='lastName' onBlur={props.handleChange} id={id}/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div onClick={handleClick} id={id}>Delete Customer</div>
+                </>
             }
         </>
     )
