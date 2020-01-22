@@ -3,6 +3,7 @@ const { ipcRenderer } = window.require('electron');
 
 const CustomerDetails = (props) => {
 
+    //customer details
     const [firm, setFirm] = useState(props.customerDetails.firm);
     const [street, setStreet] = useState(props.customerDetails.street);
     const [zip, setZip] = useState(props.customerDetails.zip);
@@ -11,6 +12,8 @@ const CustomerDetails = (props) => {
     const [firstName, setFirstName] = useState(props.customerDetails.firstName);
     const [country, setCountry] = useState(props.customerDetails.country);
     const [id, setId] = useState(props.customerDetails.id);
+    //deletion-related states
+    const [showAlert, setShowAlert] = useState(false);
 
     const handleChange = (event) => {
         //handling of inputs
@@ -47,9 +50,17 @@ const CustomerDetails = (props) => {
         }
     }
 
-    const handleClick = event => {
-        props.setSelectedCustomer('');
-        ipcRenderer.send('delete', [`DELETE FROM customers WHERE id=?`, [Number(event.target.id)]]);
+    const handleDeletion = event => {
+        if (event.target.getAttribute('name') === 'initialDelete') {
+            setShowAlert(true);
+        }
+        else if (event.target.getAttribute('name') === 'cancelDelete') {
+            setShowAlert(false);
+        }
+        else {
+            props.setSelectedCustomer('');
+            ipcRenderer.send('delete', [`DELETE FROM customers WHERE id=?`, [Number(event.target.id)]]);
+        }
     }
     
     useEffect(() => {
@@ -101,7 +112,16 @@ const CustomerDetails = (props) => {
                             </tr>
                         </tbody>
                     </table>
-                    <div onClick={handleClick} id={id}>Delete Customer</div>
+                    {
+                    !showAlert 
+                    ?
+                    <div onClick={handleDeletion} name='initialDelete'>Delete Customer</div>
+                    : 
+                    <div>
+                        <div onClick={handleDeletion} id={id} name='confirmDelete'>Confirm</div>
+                        <div onClick={handleDeletion} name='cancelDelete'>Cancel</div>
+                    </div>
+                    }
                 </>
             }
         </>
