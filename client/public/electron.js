@@ -48,22 +48,22 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS customers(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     firm TEXT, 
-    name TEXT, 
-    surname TEXT, 
+    firstName TEXT, 
+    lastName TEXT, 
     street TEXT, 
-    zip_code INTEGER, 
+    zip INTEGER, 
     city TEXT, 
     country TEXT)`);
   db.run(`INSERT INTO customers(
     firm, 
-    name, 
-    surname, 
+    firstName, 
+    lastName, 
     street, 
-    zip_code, 
+    zip, 
     city, 
     country) 
   VALUES (?,?,?,?,?,?,?)`, [
-    'Hans Sparmeister GmbH', 
+    'Wurst GmbH', 
     'Sparmeister', 
     'Hans', 
     'Knausergasse 7', 
@@ -76,16 +76,34 @@ db.serialize(() => {
     });
 });
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-  if (arg === "retrieve-customers") {
-      db.all('SELECT * FROM customers', [], (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        console.log(rows);
-        event.sender.send('asynchronous-reply', rows)
+ipcMain.on('read', (event, arg) => {
+  db.all(`${arg}`, [], (err, rows) => {
+    if (err) {
+        throw err;
+    }
+    console.log(rows);
+    event.sender.send('asynchronous-reply', rows)
+  });
+});
+
+
+ipcMain.on('update', (event, arg) => {
+  console.log('printi: ', arg);
+  db.serialize(() => {
+    db.run(arg[0], arg[1], (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
     });
-  }
+    db.all(`SELECT * FROM customers`, [], (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      console.log(rows);
+      event.sender.send('asynchronous-reply', rows)
+    });
+  })
+  
 })
 
 
