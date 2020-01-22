@@ -100,7 +100,7 @@ ipcMain.on('update', (event, arg) => {
       }
       console.log(rows);
       //results are send to the renderer, but not the event emitter
-      win.webContents.send( 'asynchronous-reply', rows );
+      mainWindow.webContents.send( 'asynchronous-reply', rows );
     });
   })
 })
@@ -120,6 +120,26 @@ ipcMain.on('delete', (event, arg) => {
       console.log(rows);
       //results are send to the renderer, but not the event emitter
       mainWindow.webContents.send( 'asynchronous-reply', rows );
+    });
+  })
+})
+
+ipcMain.on('create', (event, arg) => {
+  console.log('printi: ', arg);
+  db.serialize(() => {
+    db.run(arg[0], arg[1], (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+    });
+    db.all(`SELECT * FROM customers`, [], (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      console.log(rows);
+      console.log(rows[rows.length-1].id);
+      //results are send to the renderer, but not the event emitter
+      mainWindow.webContents.send( 'customer-creation', rows );
     });
   })
 })

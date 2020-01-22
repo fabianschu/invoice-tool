@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import Customers from './components/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
+import NewCustomer from './components/NewCustomer/NewCustomer';
 const { ipcRenderer } = window.require('electron');
 
 
@@ -14,51 +15,48 @@ function App() {
 
   useEffect(() => {
     console.log("hi");
-
+    
+    
+    ipcRenderer.on('customer-creation', (event, arg) => { 
+      console.log('IPC channel communication - select customer: ', arg);
+      let index = arg[arg.length-1].id;
+      setCustomers(arg);
+      setSelectedCustomer(index);
+    }); 
+    
     ipcRenderer.on('asynchronous-reply', (event, arg) => {
-        console.log('IPC channel communication: ', arg);
+        console.log('IPC channel communication - NEW ARRAY: ', arg);
         setCustomers(arg);
     }); 
 
     ipcRenderer.send('read', 'SELECT * FROM customers');
   }, [])
 
-  const handleClick = (event) => {
+  const handleCustomerSelection = (event) => {
     setSelectedCustomer(Number(event.target.id));
 }
 
-  const handleChange = event => {
-    console.log('blur')
-    //request main to update database and to return the new database
-    console.log(event.target.name);
-    console.log(event.target.id);
-    // ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, Number(event.target.id)]]);
-    /*
-    console.log(event.target);
-    let data = [event.target.value, Number(event.target.id)];
-    console.log(data);
-    let sql = `UPDATE customers
-                SET firm = ?
-                WHERE id = ?`;
-    
-    db.run(sql, data, function(err) {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log(`Row(s) updated: ${this.changes}`);
-    
-    });
-    */
-    //set new state
-  }
-
   console.log('App re-renders');
+  console.log(selectedCustomer);
+  console.log(customers);
+  console.log(customers.find(el => el.id === Number(selectedCustomer)));
 
   return (
     <div className="App">
-      <Customers selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} customers={customers} handleClick={handleClick}/>
-
-      {selectedCustomer !== '' && <CustomerDetails customerDetails={customers.find(el => el.id === selectedCustomer)} handleChange={handleChange} selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>}
+      <Customers setSelectedCustomer={setSelectedCustomer} customers={customers}/>
+      {
+        // if state is empty string render empty fragment
+        selectedCustomer === '' 
+        ?
+        <></>
+        //else check if selected cutomer = 'new'
+        :
+        selectedCustomer === 'new'
+        ?
+        <NewCustomer setSelectedCustomer={setSelectedCustomer}/>
+        :
+        <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
+      }
     </div>
   );
 }
