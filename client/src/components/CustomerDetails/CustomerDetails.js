@@ -14,29 +14,38 @@ const CustomerDetails = (props) => {
 
     const handleChange = (event) => {
         //handling of inputs
-        switch(event.target.name) {
-            case 'firm':
-                setFirm(event.target.value);
-                break;
-            case 'street':
-                setStreet(event.target.value);
-                break;
-            case 'zip':
-                setZip(event.target.value);
-                break;
-            case 'city':
-                setCity(event.target.value);
-                break; 
-            case 'lastName':
-                setLastName(event.target.value);
-                break;
-            case 'firstName':
-                setFirstName(event.target.value);
-                break;
-            case 'country':
-                setCountry(event.target.value);
-                break; 
+        if(event.type === 'change') {
+            switch(event.target.name) {
+                case 'firm':
+                    setFirm(event.target.value);
+                    break;
+                case 'street':
+                    setStreet(event.target.value);
+                    break;
+                case 'zip':
+                    setZip(event.target.value);
+                    break;
+                case 'city':
+                    setCity(event.target.value);
+                    break; 
+                case 'lastName':
+                    setLastName(event.target.value);
+                    break;
+                case 'firstName':
+                    setFirstName(event.target.value);
+                    break;
+                case 'country':
+                    setCountry(event.target.value);
+                    break; 
+            }
         }
+        
+        //if event type is blur, the main process is asked to update the db, it will then query the db again and send the result to the ipcRenderer (but not the event emitter)
+        if(event.type === 'blur') {
+            ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, Number(event.target.id)]]);
+        }
+
+        //
     }
     
     useEffect(() => {
@@ -60,7 +69,7 @@ const CustomerDetails = (props) => {
                     <tbody>
                         <tr>
                             <th>Firm</th>
-                            <td><input type="text" value={firm} onChange={handleChange} name='firm' onBlur={props.handleChange} id={id}/></td>
+                            <td><input type="text" value={firm} onChange={handleChange} name='firm' onBlur={handleChange} id={id}/></td>
                         </tr>
                         <tr>
                             <th>Street</th>

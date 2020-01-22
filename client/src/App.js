@@ -10,6 +10,7 @@ function App() {
 
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [customers, setCustomers] = useState([]);
+  const [showAccounts, setShowAccounts] = useState('');
 
   useEffect(() => {
     console.log("hi");
@@ -31,7 +32,7 @@ function App() {
     //request main to update database and to return the new database
     console.log(event.target.name);
     console.log(event.target.id);
-    ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, Number(event.target.id)]]);
+    // ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, Number(event.target.id)]]);
     /*
     console.log(event.target);
     let data = [event.target.value, Number(event.target.id)];

@@ -30,7 +30,6 @@ app.on(
 () => process.platform !== "darwin" && app.quit()
 );
 
-
 var db = new sqlite3.Database(dbPath, (err) => {
   
   if (err) {
@@ -100,7 +99,8 @@ ipcMain.on('update', (event, arg) => {
           throw err;
       }
       console.log(rows);
-      event.sender.send('asynchronous-reply', rows)
+      //results are send to the renderer, but not the event emitter
+      rendererWindow.webContents.send( 'asynchronous-reply', rows );
     });
   })
   
