@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef,
+    createRef} from 'react';
 const { ipcRenderer } = window.require('electron');
 
 const NewCustomer = (props) => {
@@ -44,6 +45,13 @@ const NewCustomer = (props) => {
         }
     }
 
+    const keypressHandler = event => {
+        if (event.key === "Enter") {
+            //this.setState({ value: this.inputRef.current.value });
+            event.target.blur();
+        }
+    }
+
     const handleClick = event => {
         let sql = `INSERT INTO customers(
             firm, 
@@ -71,31 +79,31 @@ const NewCustomer = (props) => {
                 <tbody>
                     <tr>
                         <th>Firm</th>
-                        <td><input type="text" value={firm} onChange={handleChange} name='firm'/></td>
+                        <td><input type="text" value={firm} onChange={handleChange} name='firm' onKeyPress={keypressHandler}/></td>
                     </tr>
                     <tr>
                         <th>Street</th>
-                        <td><input type="text" value={street} onChange={handleChange} name='street'/></td>
+                        <td><input type="text" value={street} onChange={handleChange} name='street' onKeyPress={keypressHandler}/></td>
                     </tr>
                     <tr>
                         <th>Zip Code</th>
-                        <td><input type="text" value={zip} onChange={handleChange} name='zip'/></td>
+                        <td><input type="text" value={zip} onChange={handleChange} name='zip' onKeyPress={keypressHandler}/></td>
                     </tr>
                     <tr>
                         <th>City</th>
-                        <td><input type="text" value={city} onChange={handleChange} name='city'/></td>
+                        <td><input type="text" value={city} onChange={handleChange} name='city' onKeyPress={keypressHandler}/></td>
                     </tr>
                     <tr>
                         <th>Country</th>
-                        <td><input type="text" value={country} onChange={handleChange} name='country'/></td>
+                        <td><input type="text" value={country} onChange={handleChange} name='country' onKeyPress={keypressHandler}/></td>
                     </tr>
                     <tr>
                         <th>Surname</th>
-                        <td><input type="text" value={firstName} onChange={handleChange} name='firstName'/></td>
+                        <td><input type="text" value={firstName} onChange={handleChange} name='firstName' onKeyPress={keypressHandler}/></td>
                     </tr>
                     <tr>
                         <th>Name</th>
-                        <td><input type="text" value={lastName} onChange={handleChange} name='lastName'/></td>
+                        <td><input type="text" value={lastName} onChange={handleChange} name='lastName' onKeyPress={keypressHandler}/></td>
                     </tr>
                 </tbody>
             </table>

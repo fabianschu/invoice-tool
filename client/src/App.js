@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
-import Customers from './components/Customers';
+import styled, {ThemeProvider, createGlobalStyle} from 'styled-components';
+import Customers from './components/Customers/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 import NewCustomer from './components/NewCustomer/NewCustomer';
+
 const { ipcRenderer } = window.require('electron');
 
-
+const PageLayout = styled.div`
+  margin-left: 200px;
+`
 
 function App() {
 
@@ -34,16 +37,34 @@ function App() {
 
   const handleCustomerSelection = (event) => {
     setSelectedCustomer(Number(event.target.id));
-}
+  }
 
-  console.log('App re-renders');
-  console.log(selectedCustomer);
-  console.log(customers);
-  console.log(customers.find(el => el.id === Number(selectedCustomer)));
+  const GlobalStyle = createGlobalStyle`
+    html {
+        box-sizing: border-box;
+        font-size: 10px;
+    }
+    *, *:before, *:after{
+        box-sizing: inherit;
+    }
+    body {
+        padding: 0;
+        margin: 0;
+        font-size: 1.5rem;
+        line-height: 2;
+        background-color: aquamarine;
+    }
+    a {
+        text-decoration: none;
+        color: black;
+    }
+  `
 
   return (
-    <div className="App">
+    <>
+    <GlobalStyle/>
       <Customers setSelectedCustomer={setSelectedCustomer} customers={customers}/>
+      <PageLayout>
       {
         // if state is empty string render empty fragment
         selectedCustomer === '' 
@@ -57,7 +78,8 @@ function App() {
         :
         <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
       }
-    </div>
+      </PageLayout>
+    </>
   );
 }
 
