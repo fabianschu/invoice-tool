@@ -1,28 +1,42 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
+const TopLeft = styled.div`
+    height: 100px;
+    width: 200px;
+    background-color: white;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
 const StyledCustomers = styled.div` 
     width: 200px; /* Set the width of the sidebar */
     left: 0;
+    height: 100%;
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
+    top: 100px; /* Stay at the top */
     left: 0;
     background-color: #111; /* Black */
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 20px;
+    * {
+        color: black;
+    }
+    li {
+        text-align: center;
+        width: 100%;
+        background-color: blue;
+        user-select: none;
+    }
     li:hover {
-        color: #f1f1f1;
+        background-color: #f1f1f1;
     }
-    .create-customer{
-        top: 0; /* Stay at the top */
-        height: 100px;
-        background-color: white;
-        position: fixed;
-    }
-    .customer-list{
-        top: 100px; /* Stay at the top */
-        height: 80vh;
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
     }
 `
 
@@ -37,10 +51,11 @@ const Customers = (props) => {
     }
 
     return (
-        <StyledCustomers>
-            <div className='create-customer'onClick={handleNewCustomer}>
+        <>
+        <TopLeft className='create-customer' onClick={handleNewCustomer}>
                 Create New Customer
-            </div>
+        </TopLeft>
+        <StyledCustomers>
             <ul className='customer-list'>
                 {props.customers.map((customer) => {
                     return(
@@ -49,6 +64,7 @@ const Customers = (props) => {
                 })}
             </ul>
         </ StyledCustomers>
+        </>
     )
 }
 
