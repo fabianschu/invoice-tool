@@ -3,6 +3,7 @@ import styled, {ThemeProvider, createGlobalStyle} from 'styled-components';
 import Customers from './components/Customers/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 import NewCustomer from './components/NewCustomer/NewCustomer';
+import CreateInvoice from './components/CreateInvoice/CreateInvoice';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -76,8 +77,12 @@ function App() {
         ?
         <NewCustomer setSelectedCustomer={setSelectedCustomer}/>
         :
-        <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
+        <>
+          <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
+          <CreateInvoice />
+        </>
       }
+
       </PageLayout>
     </>
   );

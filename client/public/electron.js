@@ -2,6 +2,7 @@ const { app, ipcMain, BrowserWindow } = require("electron");
 var sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 
+
 //path for .db file
 const dbPath = './database.db';
 
@@ -149,28 +150,20 @@ ipcMain.on('create', (event, arg) => {
     });
   })
 })
+
+// ipcMain.on('print', (event, arg) => {
+//     let win = new BrowserWindow({ width: 800, height: 600 })
+//     win.loadURL('http://github.com')
+//     win.webContents.on('did-finish-load', () => {
+//     // Use default printing options
+//         win.webContents.printToPDF({}).then(data => {
+//             fs.writeFile('./print.pdf', data, (error) => {
+//                 if (error) throw error
+//                 console.log('Write PDF successfully.')
+//             })
+//         })
+//             .catch(error => {console.log(error)})
+//     })
+// })
  
 //db.close();
-
-/*
-const { BrowserWindow, app } = require('electron')
-const fs = require('fs')
-
-
-app.on('ready', () => {
-    let win = new BrowserWindow({ width: 800, height: 600 })
-    win.loadURL('http://github.com')
-
-    win.webContents.on('did-finish-load', () => {
-    // Use default printing options
-        win.webContents.printToPDF({}).then(data => {
-            fs.writeFile('./print.pdf', data, (error) => {
-                if (error) throw error
-                console.log('Write PDF successfully.')
-            })
-        })
-            .catch(error => {console.log(error)})
-    })
-});
-
-*/
