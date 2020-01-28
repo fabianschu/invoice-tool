@@ -21,51 +21,11 @@ const createWindow = () => {
   });
 };
 
-/*
-//######################
-const createPdf = () => {
-  console.log("createPdf start")
-  window_to_PDF = new BrowserWindow({show : false});//to just open the browser in background
-  window_to_PDF.loadFile('test.html'); //give the file link you wantto display
-
-  console.log(window_to_PDF);
-
-  function pdfSettings() {
-      var paperSizeArray = ["A4", "A5"];
-      var option = {
-          landscape: false,
-          marginsType: 0,
-          printBackground: false,
-          printSelectionOnly: false,
-          pageSize: "A4"
-          // pageSize: paperSizeArray[settingCache.getPrintPaperSize()-1],
-      };
-    return option;
-  }
-  window_to_PDF.webContents.printToPDF(pdfSettings(), function(err, data) {
-      if (err) {
-          //do whatever you want
-          return;
-      }
-      try{
-          fs.writeFileSync('./generated_pdf.pdf', data);
-      }catch(err){
-          //unable to save pdf..
-          console.log(err);
-      }
-  })
-}
-
-//#############
-*/
-
-
 app.on('ready', () => {
   /// #if env == 'DEBUG'
   console.log('Initialize Application')
   /// #endif
 
-  //createPdf();
   createWindow();
 })
 
@@ -191,3 +151,26 @@ ipcMain.on('create', (event, arg) => {
 })
  
 //db.close();
+
+/*
+const { BrowserWindow, app } = require('electron')
+const fs = require('fs')
+
+
+app.on('ready', () => {
+    let win = new BrowserWindow({ width: 800, height: 600 })
+    win.loadURL('http://github.com')
+
+    win.webContents.on('did-finish-load', () => {
+    // Use default printing options
+        win.webContents.printToPDF({}).then(data => {
+            fs.writeFile('./print.pdf', data, (error) => {
+                if (error) throw error
+                console.log('Write PDF successfully.')
+            })
+        })
+            .catch(error => {console.log(error)})
+    })
+});
+
+*/
