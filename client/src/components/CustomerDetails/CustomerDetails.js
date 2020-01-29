@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer } = require('electron');
 
 const StyledContainer = styled.div`
     background-color: white;

@@ -13,6 +13,7 @@ const createWindow = () => {
   height: 768,
   width: 1024,
   webPreferences: {
+      webSecurity: false,
       nodeIntegration: true
   }
   });
@@ -151,19 +152,26 @@ ipcMain.on('create', (event, arg) => {
   })
 })
 
-// ipcMain.on('print', (event, arg) => {
-//     let win = new BrowserWindow({ width: 800, height: 600 })
-//     win.loadURL('http://github.com')
-//     win.webContents.on('did-finish-load', () => {
-//     // Use default printing options
-//         win.webContents.printToPDF({}).then(data => {
-//             fs.writeFile('./print.pdf', data, (error) => {
-//                 if (error) throw error
-//                 console.log('Write PDF successfully.')
-//             })
-//         })
-//             .catch(error => {console.log(error)})
-//     })
-// })
+ipcMain.on('print', (event, arg) => {
+    let win = new BrowserWindow({
+       width: 800, 
+       height: 600,
+       webPreferences: {
+        webSecurity: false,
+        nodeIntegration: true
+    }
+    })
+    win.loadURL('http://localhost:3000')
+    win.webContents.on('did-finish-load', () => {
+    // Use default printing options
+        win.webContents.printToPDF({}).then(data => {
+            fs.writeFile('./print.pdf', data, (error) => {
+                if (error) throw error
+                console.log('Write PDF successfully.')
+            })
+        })
+            .catch(error => {console.log(error)})
+    })
+})
  
 //db.close();

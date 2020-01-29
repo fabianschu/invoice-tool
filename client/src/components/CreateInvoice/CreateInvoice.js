@@ -1,5 +1,5 @@
 import React from 'react';
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer } = require('electron');
 
 const CreateInvoice = (props) => {
     
