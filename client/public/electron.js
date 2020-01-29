@@ -125,7 +125,7 @@ ipcMain.on('delete', (event, arg) => {
       if (err) {
           throw err;
       }
-      console.log(rows);
+      //console.log(rows);
       //results are send to the renderer, but not the event emitter
       mainWindow.webContents.send( 'asynchronous-reply', rows );
     });
@@ -154,17 +154,19 @@ ipcMain.on('create', (event, arg) => {
 
 ipcMain.on('print', (event, arg) => {
     let win = new BrowserWindow({
-       width: 800, 
-       height: 600,
+       width: 768, 
+       height: 1024,
        webPreferences: {
         webSecurity: false,
         nodeIntegration: true
     }
     })
     win.loadURL('http://localhost:3000')
+    
     win.webContents.on('did-finish-load', () => {
     // Use default printing options
         win.webContents.printToPDF({}).then(data => {
+            //console.log(data);
             fs.writeFile('./print.pdf', data, (error) => {
                 if (error) throw error
                 console.log('Write PDF successfully.')

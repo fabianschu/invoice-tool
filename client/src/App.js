@@ -4,7 +4,7 @@ import Customers from './components/Customers/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 import NewCustomer from './components/NewCustomer/NewCustomer';
 import CreateInvoice from './components/CreateInvoice/CreateInvoice';
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = window.require('electron');
 
 const PageLayout = styled.div`
   margin-left: 200px;

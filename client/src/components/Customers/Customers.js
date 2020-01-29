@@ -9,6 +9,9 @@ const TopLeft = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    p {
+        color: red;
+    }
 `
 
 const StyledCustomers = styled.div` 
@@ -51,9 +54,9 @@ const Customers = (props) => {
     }
 
     return (
-        <>
+        <div>
         <TopLeft className='create-customer' onClick={handleNewCustomer}>
-                Create New Customer
+            <p>Create New Customer</p>     
         </TopLeft>
         <StyledCustomers>
             <ul className='customer-list'>
@@ -64,7 +67,7 @@ const Customers = (props) => {
                 })}
             </ul>
         </ StyledCustomers>
-        </>
+        </div>
     )
 }
 

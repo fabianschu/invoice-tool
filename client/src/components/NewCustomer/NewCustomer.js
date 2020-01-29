@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef,
     createRef} from 'react';
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = window.require('electron');
 
 const NewCustomer = (props) => {
 
