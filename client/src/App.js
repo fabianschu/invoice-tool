@@ -4,6 +4,8 @@ import Customers from './components/Customers/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 import NewCustomer from './components/NewCustomer/NewCustomer';
 import CreateInvoice from './components/CreateInvoice/CreateInvoice';
+import SpecialView from './components/SpecialView';
+
 const { ipcRenderer } = window.require('electron');
 
 const PageLayout = styled.div`
@@ -15,6 +17,7 @@ function App() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [customers, setCustomers] = useState([]);
   const [showAccounts, setShowAccounts] = useState('');
+  const [specialView, setSpecialView] = useState(false);
 
   useEffect(() => {
     console.log("hi");
@@ -62,8 +65,10 @@ function App() {
 
   return (
     <>
-    <GlobalStyle/>
-      <Customers setSelectedCustomer={setSelectedCustomer} customers={customers}/>
+    {!specialView &&
+      <>
+      <GlobalStyle/>
+      <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} x='xx'/>
       <PageLayout>
       {
         // if state is empty string render empty fragment
@@ -72,17 +77,21 @@ function App() {
         <></>
         //else check if selected cutomer = 'new'
         :
-        selectedCustomer === 'new'
+        selectedCustomer === 'new' && specialView === true
         ?
         <NewCustomer setSelectedCustomer={setSelectedCustomer}/>
         :
         <>
           <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
-          <CreateInvoice />
+          <CreateInvoice setSpecialView={setSpecialView}/>
         </>
       }
-
       </PageLayout>
+      </>
+    }
+    {specialView && 
+      <SpecialView setSpecialView={setSpecialView}/>
+    }
     </>
   );
 }

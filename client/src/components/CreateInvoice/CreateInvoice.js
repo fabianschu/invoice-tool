@@ -1,10 +1,11 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 const { ipcRenderer } = window.require('electron');
 
 const CreateInvoice = (props) => {
     
     const onClick = event => {
-        ipcRenderer.send('print', 'print');
+        props.setSpecialView(true);
     }
     
     return (
@@ -30,6 +31,7 @@ const CreateInvoice = (props) => {
             </table>
 
             <button onClick={onClick}>Print</button>
+            <Link to="/test">TEST</Link>
         </div>
     )
 }

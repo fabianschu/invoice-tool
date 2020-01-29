@@ -53,10 +53,12 @@ const Customers = (props) => {
         props.setSelectedCustomer('new');
     }
 
+    console.log(props.x);
+
     return (
         <div>
         <TopLeft className='create-customer' onClick={handleNewCustomer}>
-            <p>Create New Customer</p>     
+            <p>{props.x}</p>     
         </TopLeft>
         <StyledCustomers>
             <ul className='customer-list'>

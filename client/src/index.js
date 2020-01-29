@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import CreateInvoice from './components/CreateInvoice/CreateInvoice';
+import Test from './components/Test';
 import * as serviceWorker from './serviceWorker';
-import {HashRouter, Route} from "react-router-dom";
+import {HashRouter, Route, Switch} from "react-router-dom";
 
 //ReactDOM.render(<App />, document.getElementById('root'));
 
 ReactDOM.render(<HashRouter>
-  <div>
-    <Route path="/" exact     component={ App } />
-  </div>
+    <Switch>
+    <Route path="/test" exact component={ Test } />
+    <Route path="/" exact component={ App } />
+    </Switch>
 </HashRouter>, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
