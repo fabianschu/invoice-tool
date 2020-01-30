@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 const { ipcRenderer } = window.require('electron');
 
 
-const SpecialView = (props) => {
+const InvoiceView = (props) => {
 
     const [buttonsDisplay, setButtonsDisplay] = useState(true);
 
@@ -29,4 +29,4 @@ const SpecialView = (props) => {
     )
 }
 
-export default SpecialView
+export default InvoiceView

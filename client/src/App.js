@@ -4,7 +4,7 @@ import Customers from './components/Customers/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 import NewCustomer from './components/NewCustomer/NewCustomer';
 import CreateInvoice from './components/CreateInvoice/CreateInvoice';
-import SpecialView from './components/SpecialView';
+import InvoiceView from './components/InvoiceView';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -83,14 +83,14 @@ function App() {
         :
         <>
           <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
-          <CreateInvoice setSpecialView={setSpecialView}/>
+          <CreateInvoice setSpecialView={setSpecialView} selectedCustomer={selectedCustomer}/>
         </>
       }
       </PageLayout>
       </>
     }
     {specialView && 
-      <SpecialView setSpecialView={setSpecialView}/>
+      <InvoiceView setSpecialView={setSpecialView}/>
     }
     </>
   );
