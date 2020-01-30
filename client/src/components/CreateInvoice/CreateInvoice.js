@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
 const { ipcRenderer } = window.require('electron');
 
 const CreateInvoice = (props) => {
@@ -31,7 +30,6 @@ const CreateInvoice = (props) => {
             </table>
 
             <button onClick={onClick}>Print</button>
-            <Link to="/test">TEST</Link>
         </div>
     )
 }
