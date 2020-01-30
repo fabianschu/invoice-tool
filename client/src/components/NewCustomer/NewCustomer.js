@@ -69,7 +69,7 @@ const NewCustomer = (props) => {
             zip, 
             city, 
             country];
-        ipcRenderer.send('create', [sql, data]);
+        ipcRenderer.send('create-customer', [sql, data]);
         // props.setSelectedCustomer('');
     }
     

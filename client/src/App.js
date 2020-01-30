@@ -23,19 +23,19 @@ function App() {
     console.log("hi");
     
     
-    ipcRenderer.on('customer-creation', (event, arg) => { 
+    ipcRenderer.on('customer-created', (event, arg) => { 
       console.log('IPC channel communication - select customer: ', arg);
       let index = arg[arg.length-1].id;
       setCustomers(arg);
       setSelectedCustomer(index);
     }); 
     
-    ipcRenderer.on('asynchronous-reply', (event, arg) => {
+    ipcRenderer.on('customers-initialized', (event, arg) => {
         console.log('IPC channel communication - NEW ARRAY: ', arg);
         setCustomers(arg);
     }); 
 
-    ipcRenderer.send('read', 'SELECT * FROM customers');
+    ipcRenderer.send('initialize-customers', 'SELECT * FROM customers');
   }, [])
 
   const handleCustomerSelection = (event) => {
@@ -77,7 +77,7 @@ function App() {
         <></>
         //else check if selected cutomer = 'new'
         :
-        selectedCustomer === 'new' && specialView === true
+        selectedCustomer === 'new'
         ?
         <NewCustomer setSelectedCustomer={setSelectedCustomer}/>
         :

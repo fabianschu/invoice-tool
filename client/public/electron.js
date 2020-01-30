@@ -61,6 +61,19 @@ db.serialize(() => {
     zip INTEGER, 
     city TEXT, 
     country TEXT)`);
+  db.run(`CREATE TABLE IF NOT EXISTS positions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fk_invoice INTEGER, 
+    project TEXT, 
+    description TEXT, 
+    hours TEXT)`);
+  db.run(`CREATE TABLE IF NOT EXISTS invoices(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fk_customer INTEGER, 
+    title1 TEXT,
+    title2 TEXT,
+    invoiceNumber INTEGER
+    )`);
   db.run(`INSERT INTO customers(
     firm, 
     firstName, 
@@ -83,13 +96,12 @@ db.serialize(() => {
     });
 });
 
-ipcMain.on('read', (event, arg) => {
+ipcMain.on('initialize-customers', (event, arg) => {
   db.all(`${arg}`, [], (err, rows) => {
     if (err) {
         throw err;
     }
-    console.log(rows);
-    event.sender.send('asynchronous-reply', rows)
+    event.sender.send('customers-initialized', rows)
   });
 });
 
@@ -132,8 +144,9 @@ ipcMain.on('delete', (event, arg) => {
   })
 })
 
-ipcMain.on('create', (event, arg) => {
-  console.log('printi: ', arg);
+ipcMain.on('create-customer', (event, arg) => {
+  console.log('event: ', event);
+  console.log('arg: ', arg);
   db.serialize(() => {
     db.run(arg[0], arg[1], (err) => {
       if (err) {
@@ -147,10 +160,43 @@ ipcMain.on('create', (event, arg) => {
       console.log(rows);
       console.log(rows[rows.length-1].id);
       //results are send to the renderer, but not the event emitter
-      mainWindow.webContents.send( 'customer-creation', rows );
+      mainWindow.webContents.send( 'customer-created', rows );
     });
   })
-})
+});
+
+ipcMain.on('create-invoice', (event, arg) => {
+
+  db.serialize(() => {
+    let currentInvoiceNumber;
+    let data = [...arg[1]];
+
+    db.all(`SELECT MAX(invoiceNumber) FROM invoices;`, [], (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      let tmp = Object.values(rows[0])[0];
+      currentInvoiceNumber = tmp + 1;
+      data[3] = currentInvoiceNumber;
+
+      db.run(arg[0], data, (err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+      });
+
+    });
+
+    db.all(`SELECT * FROM invoices;`, [], (err, rows) => {
+
+      if (err) {
+          throw err;
+      }
+
+      event.reply('invoice-created', rows);
+    });
+  })
+});
 
 ipcMain.on('print', (event, arg) => {
     // let win = new BrowserWindow({

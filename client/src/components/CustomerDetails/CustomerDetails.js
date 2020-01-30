@@ -79,11 +79,6 @@ const CustomerDetails = (props) => {
     }
 
     const handleSelect = event => {
-        console.log(event.target);
-        console.log(event.target.value);
-        console.log(event.type);
-        console.log(event.target.name);
-        console.log(event.target.getAttribute('stateid'));
         let stateId = Number(event.target.getAttribute('stateid'));
         ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, stateId]]);
     }
