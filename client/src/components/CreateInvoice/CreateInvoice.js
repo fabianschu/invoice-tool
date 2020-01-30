@@ -26,9 +26,16 @@ const CreateInvoice = (props) => {
     
     useEffect(() =>{
         ipcRenderer.on('invoice-created', (event, arg) => {
+            
+            //display last created invoice of that customer
             console.log(arg);
             let invoiceData = arg.filter(el => el.fk_customer === props.selectedCustomer);
             console.log(invoiceData);
+            invoiceData = invoiceData.reduce((acc, val) => {
+                console.log(acc);
+                console.log(val);
+                val.id > acc ? console.log('hi') : console.log('ho');
+            }, [])
         })
     }, [])
 
