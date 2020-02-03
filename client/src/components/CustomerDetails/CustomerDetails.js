@@ -30,7 +30,6 @@ const StyledContainer = styled.div`
 `
 
 const CustomerDetails = (props) => {
-    console.log(props);
     //customer details
     const [firm, setFirm] = useState(props.customerDetails.firm);
     const [street, setStreet] = useState(props.customerDetails.street);

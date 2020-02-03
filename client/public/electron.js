@@ -192,35 +192,73 @@ ipcMain.on('create-invoice', (event, arg) => {
       if (err) {
           throw err;
       }
-
+      console.log('querying');
       event.reply('invoice-created', rows);
     });
   })
 });
 
+ipcMain.on('create-position', (event, arg) => {
+  console.log('create position for invoice: ', arg);
+  let invoiceId = arg[1][0];
+  console.log(invoiceId);
+  db.serialize(() => {
+    db.run(arg[0], arg[1], (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+    });
+  })
+  db.get(`SELECT * FROM positions WHERE fk_invoice = ?`, invoiceId, (err, rows) => {
+    if (err) {
+        throw err;
+    }
+    console.log(rows);
+    mainWindow.webContents.send( 'position-created', rows );
+  });
+})
+
+ipcMain.on('update-position', (event, arg) => {
+  console.log(arg);
+  let id = arg[1][1];
+  db.serialize(() => {
+    db.run(arg[0], arg[1], (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+    });
+    db.get(`SELECT * FROM positions WHERE id = ?`, id, (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      console.log(rows);
+      //results are send to the renderer, but not the event emitter
+      mainWindow.webContents.send( 'position-updated', rows );
+    });
+  })
+})
+
+ipcMain.on('read-invoice', (event, arg) => {
+  console.log('zuzi: ',arg);
+  // let id = arg[1][1];
+  // db.serialize(() => {
+  //   db.run(arg[0], arg[1], (err) => {
+  //     if (err) {
+  //       return console.error(err.message);
+  //     }
+  //   });
+    db.get(arg[0], arg[1], (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      console.log(rows);
+      mainWindow.webContents.send( 'invoice-read', rows );
+    });
+  // })
+})
+
+
 ipcMain.on('print', (event, arg) => {
-    // let win = new BrowserWindow({
-    //    width: 768, 
-    //    height: 1024,
-    //    webPreferences: {
-    //     webSecurity: false,
-    //   nodeIntegration: true
-    // }
-    // })
-    // win.loadURL('http://localhost:3000/')
-    
-    // win.webContents.on('did-finish-load', () => {
-    // // Use default printing options
-    //     win.webContents.printToPDF({})
-    //       .then(data => {
-    //         //console.log(data);
-    //         fs.writeFile('./print.pdf', data, (error) => {
-    //             if (error) throw error
-    //             console.log('Write PDF successfully.')
-    //         })
-    //       })
-    //       .catch(error => {console.log(error)})
-    // })
     mainWindow.webContents.printToPDF({})
           .then(data => {
             //console.log(data);

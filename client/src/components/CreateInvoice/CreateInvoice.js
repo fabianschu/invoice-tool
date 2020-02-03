@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import Position from '../Position';
 const { ipcRenderer } = window.require('electron');
@@ -25,26 +25,52 @@ const CreateInvoice = (props) => {
     const [positions, setPositions] = useState([]);
     
     useEffect(() =>{
-        ipcRenderer.on('invoice-created', (event, arg) => {
-            
-            //display last created invoice of that customer
-            console.log(arg);
+        ipcRenderer.once('invoice-created', (event, arg) => {
+            //get last created invoice from customer
             let invoiceData = arg.filter(el => el.fk_customer === props.selectedCustomer);
-            console.log(invoiceData);
-            invoiceData = invoiceData.reduce((acc, val) => {
-                console.log(acc);
-                console.log(val);
-                val.id > acc ? console.log('hi') : console.log('ho');
-            }, [])
+            invoiceData = invoiceData[invoiceData.length - 1];
+            let invoiceId = invoiceData.id;
+            console.log(invoiceId);
+            //create new position for this customer
+            let sql = `INSERT INTO positions(
+                fk_invoice, 
+                project,
+                description,
+                hours)
+                VALUES (?,?,?,?)`;
+            let data = [invoiceId, 
+                '', 
+                '',
+                ''];
+            ipcRenderer.send('create-position', [sql, data]);
         })
+
+        // if there is already an invoice for the customer show it
+        // read from db, if invoice exists
+        let sql = `SELECT * FROM invoices WHERE fk_customer = ?`
+        let data = props.selectedCustomer;
+        ipcRenderer.send('read-invoice', [sql, data]);
+        //
+
+    }, [props.selectedCustomer]);
+
+    useEffect(() => {
+        console.log('setting up the renderer')
+        ipcRenderer.on('invoice-read', (event, arg) => {
+            console.log(arg);
+            let tmp = [...positions];
+            tmp.push(arg);
+            console.log(tmp);
+            setPositions(tmp);
+            console.log(positions);
+        });
+
     }, [])
 
     const onClick = event => {
         //props.setSpecialView(true);
         
         //create new invoice
-        
-        //create newrow in table
         let sql = `INSERT INTO invoices(
             fk_customer, 
             title1,
@@ -54,7 +80,10 @@ const CreateInvoice = (props) => {
         let data = [props.selectedCustomer, 
             '', 
             ''];
+        console.log(data);
         ipcRenderer.send('create-invoice', [sql, data]);
+        
+        //create newrow in table
 
         //query from that row
 
@@ -66,8 +95,8 @@ const CreateInvoice = (props) => {
         // }])
     }
 
-    console.log(positions);
     console.log(props.selectedCustomer);
+    console.log(positions);
     
     return (
         <>
@@ -88,7 +117,7 @@ const CreateInvoice = (props) => {
                         </tr>
                     </thead>
                     {/* if invoice already has positions render them here */}
-                    {positions.map(position => <Position details={position} />)}
+                    {positions[0] && positions.map(position => <Position details={position} key={position.id}/>)}
                     {/* <tbody>
                         <tr>
                             <td>a</td>
