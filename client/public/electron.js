@@ -166,7 +166,7 @@ ipcMain.on('create-customer', (event, arg) => {
 });
 
 ipcMain.on('create-invoice', (event, arg) => {
-
+  console.log(arg);
   db.serialize(() => {
     let currentInvoiceNumber;
     let data = [...arg[1]];
@@ -193,6 +193,7 @@ ipcMain.on('create-invoice', (event, arg) => {
           throw err;
       }
       console.log('querying');
+      console.log('providing invoices: ', rows);
       event.reply('invoice-created', rows);
     });
   })
@@ -209,12 +210,23 @@ ipcMain.on('create-position', (event, arg) => {
       }
     });
   })
-  db.get(`SELECT * FROM positions WHERE fk_invoice = ?`, invoiceId, (err, rows) => {
+  db.all(`SELECT * FROM positions WHERE fk_invoice = ?`, invoiceId, (err, rows) => {
     if (err) {
         throw err;
     }
-    console.log(rows);
-    mainWindow.webContents.send( 'position-created', rows );
+    console.log('position created: ', rows);
+    mainWindow.webContents.send( 'position-read', rows );
+  });
+})
+
+ipcMain.on('read-position', (event, arg) => {
+  console.log(arg);
+  db.all(arg[0], arg[1], (err, rows) => {
+    if (err) {
+        throw err;
+    }
+    console.log('positions read: ', rows);
+    mainWindow.webContents.send( 'position-read', rows );
   });
 })
 
@@ -227,7 +239,7 @@ ipcMain.on('update-position', (event, arg) => {
         return console.error(err.message);
       }
     });
-    db.get(`SELECT * FROM positions WHERE id = ?`, id, (err, rows) => {
+    db.all(`SELECT * FROM positions WHERE id = ?`, id, (err, rows) => {
       if (err) {
           throw err;
       }
@@ -239,7 +251,7 @@ ipcMain.on('update-position', (event, arg) => {
 })
 
 ipcMain.on('read-invoice', (event, arg) => {
-  console.log('zuzi: ',arg);
+  console.log('read-invoice: ',arg);
   // let id = arg[1][1];
   // db.serialize(() => {
   //   db.run(arg[0], arg[1], (err) => {
@@ -247,11 +259,11 @@ ipcMain.on('read-invoice', (event, arg) => {
   //       return console.error(err.message);
   //     }
   //   });
-    db.get(arg[0], arg[1], (err, rows) => {
+    db.all(arg[0], arg[1], (err, rows) => {
       if (err) {
           throw err;
       }
-      console.log(rows);
+      console.log('read-invoice: ', rows);
       mainWindow.webContents.send( 'invoice-read', rows );
     });
   // })

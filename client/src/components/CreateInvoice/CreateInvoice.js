@@ -22,9 +22,18 @@ const InvoiceContainer = styled.div`
 
 const CreateInvoice = (props) => {
     
+    const [invoiceId, setInvoiceId] = useState();
     const [positions, setPositions] = useState([]);
     
     useEffect(() =>{
+        // if there is already an invoice for the customer show it
+        // read from db, if invoice exists
+        let sql = `SELECT ALL * FROM invoices WHERE fk_customer = ?`
+        let data = props.selectedCustomer;
+        ipcRenderer.send('read-invoice', [sql, data]);
+
+
+
         ipcRenderer.once('invoice-created', (event, arg) => {
             //get last created invoice from customer
             let invoiceData = arg.filter(el => el.fk_customer === props.selectedCustomer);
@@ -45,11 +54,6 @@ const CreateInvoice = (props) => {
             ipcRenderer.send('create-position', [sql, data]);
         })
 
-        // if there is already an invoice for the customer show it
-        // read from db, if invoice exists
-        let sql = `SELECT * FROM invoices WHERE fk_customer = ?`
-        let data = props.selectedCustomer;
-        ipcRenderer.send('read-invoice', [sql, data]);
         //
 
     }, [props.selectedCustomer]);
@@ -58,41 +62,48 @@ const CreateInvoice = (props) => {
         console.log('setting up the renderer')
         ipcRenderer.on('invoice-read', (event, arg) => {
             console.log(arg);
-            let tmp = [...positions];
-            tmp.push(arg);
-            console.log(tmp);
-            setPositions(tmp);
-            console.log(positions);
+            if(arg.length != 0) {
+                let invoiceId = arg[arg.length-1].id;
+                console.log(invoiceId);
+                let sql = `SELECT ALL * FROM positions WHERE fk_invoice = ?`;
+                let data = invoiceId;
+                //check positions of that specific invoice
+                ipcRenderer.send('read-position', [sql, data]);
+            }
+            if(arg.length === 0) {
+                setPositions([]);
+            }
         });
-
+        ipcRenderer.on('position-read', (event, arg) => {
+            console.log(arg);
+            if (arg) {
+                let tmp = [...positions];
+                tmp.push(arg);
+                console.log(tmp);
+                setPositions(tmp);
+                console.log(positions);
+            } 
+        });
     }, [])
 
     const onClick = event => {
-        //props.setSpecialView(true);
+        //create new invoice only if there are no positions yet
+        if (positions.length === 0) {
+            let sql = `INSERT INTO invoices(
+                fk_customer, 
+                title1,
+                title2,
+                invoiceNumber)
+                VALUES (?,?,?,?)`;
+            let data = [props.selectedCustomer, 
+                '', 
+                ''];
+            console.log(positions);
+            ipcRenderer.send('create-invoice', [sql, data]);
+        } else {
+        // create new position in existing invoice
         
-        //create new invoice
-        let sql = `INSERT INTO invoices(
-            fk_customer, 
-            title1,
-            title2,
-            invoiceNumber)
-            VALUES (?,?,?,?)`;
-        let data = [props.selectedCustomer, 
-            '', 
-            ''];
-        console.log(data);
-        ipcRenderer.send('create-invoice', [sql, data]);
-        
-        //create newrow in table
-
-        //query from that row
-
-        // setPositions([...positions, {
-        //     project: '',
-        //     description: '',
-        //     hours: '',
-        //     price: ''
-        // }])
+        }
     }
 
     console.log(props.selectedCustomer);
@@ -101,10 +112,10 @@ const CreateInvoice = (props) => {
     return (
         <>
         {
-            positions.length === 0 
-            ? 
-            <button onClick={onClick}>Create New Invoice</button>
-            :
+            // positions.length === 0 
+            // ? 
+            // <button onClick={onClick}>Create New Invoice</button>
+            // :
             <InvoiceContainer>
                 <h1>Invoice</h1>
                 <table>
@@ -117,7 +128,7 @@ const CreateInvoice = (props) => {
                         </tr>
                     </thead>
                     {/* if invoice already has positions render them here */}
-                    {positions[0] && positions.map(position => <Position details={position} key={position.id}/>)}
+                    {positions.length != 0 && positions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer}/>)}
                     {/* <tbody>
                         <tr>
                             <td>a</td>
