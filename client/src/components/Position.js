@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 const { ipcRenderer } = window.require('electron');
 
 const Position = (props) => {
-    console.log(props.details);
-    console.log(props.selectedCustomer);
+    // console.log(props.details);
+    // console.log(props.selectedCustomer);
 
     const [project, setProject] = useState('');
 
@@ -18,12 +18,12 @@ const Position = (props) => {
 
         if(event.type === 'blur') {
             //let stateId = Number(event.target.getAttribute('stateid'));
-            console.log('blur');
-            console.log(project);
-            console.log(props.details.id);
-            console.log(event.target.name);
+            // console.log('blur');
+            // console.log(project);
+            // console.log(props.details.id);
+            // console.log(event.target.name);
             let id = props.details.id;
-            ipcRenderer.send('update-position', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, id]]);
+            ipcRenderer.send('update-position', [`UPDATE positions SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, id]]);
         }
     }
     

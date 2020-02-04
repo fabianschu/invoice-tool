@@ -166,7 +166,9 @@ ipcMain.on('create-customer', (event, arg) => {
 });
 
 ipcMain.on('create-invoice', (event, arg) => {
-  console.log(arg);
+  console.log('create-invoice: ', arg);
+  let currentCustomer = arg[1][0];
+  console.log(currentCustomer);
   db.serialize(() => {
     let currentInvoiceNumber;
     let data = [...arg[1]];
@@ -187,7 +189,7 @@ ipcMain.on('create-invoice', (event, arg) => {
 
     });
 
-    db.all(`SELECT * FROM invoices;`, [], (err, rows) => {
+    db.all(`SELECT * FROM invoices WHERE fk_customer = ?;`, currentCustomer, (err, rows) => {
 
       if (err) {
           throw err;
@@ -209,14 +211,14 @@ ipcMain.on('create-position', (event, arg) => {
         return console.error(err.message);
       }
     });
+    db.all(`SELECT * FROM positions WHERE fk_invoice = ?`, invoiceId, (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      console.log('position created: ', rows);
+      mainWindow.webContents.send( 'position-read', rows );
+    });
   })
-  db.all(`SELECT * FROM positions WHERE fk_invoice = ?`, invoiceId, (err, rows) => {
-    if (err) {
-        throw err;
-    }
-    console.log('position created: ', rows);
-    mainWindow.webContents.send( 'position-read', rows );
-  });
 })
 
 ipcMain.on('read-position', (event, arg) => {

@@ -20,15 +20,44 @@ const InvoiceContainer = styled.div`
     }
 `
 
-const CreateInvoice = (props) => {
+const CreateInvoiceRefactor = (props) => {
     
-    const [positions, setPositions] = useState([]);
-    const [invoiceId, setInvoiceId] = useState();
-    
-    useEffect(() => {
-        
-    })
-    
+    const onClick = event => {
+        //if there is no invoice for that customer yet create a new one and create a new position
+        console.log('click on Create New Position')
+        if (props.invoicePositions.length === 0 && !props.invoiceId) {
+            console.log('initiate invoice creation');
+            let sql = `INSERT INTO invoices(
+                fk_customer, 
+                title1,
+                title2,
+                invoiceNumber)
+                VALUES (?,?,?,?)`;
+            let data = [props.selectedCustomer, 
+                '', 
+                ''];
+            ipcRenderer.send('create-invoice', [sql, data]);
+        } else {
+            //if there is an invoice already it should be being displayed, just add a position, then
+            console.log('the positions state is not empty. it contains the following value: ', props.invoicePositions);
+            console.log('the following invoiceId is saved as a state: ', props.invoiceId);
+            let sql = `INSERT INTO positions(
+                fk_invoice, 
+                project,
+                description,
+                hours)
+                VALUES (?,?,?,?)`;
+            let data = [props.invoiceId, 
+                '', 
+                '',
+                ''];
+            ipcRenderer.send('create-position', [sql, data]);
+        }
+    }
+
+    console.log('props.selectedCustomer: ', props.selectedCustomer);
+    console.log('props.invoicePositions: ', props.invoicePositions);
+    console.log('props.invoiceId: ', props.invoiceId);
 
     return (
         <>
@@ -45,14 +74,14 @@ const CreateInvoice = (props) => {
                         </tr>
                     </thead>
                     {/* if invoice already has positions render them here */}
-                    {positions.length != 0 && positions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer}/>)}
+                    {props.invoicePositions.length != 0 && props.invoicePositions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer} id={position.id}/>)}
                 </table>
                 <button className='new-position' onClick={onClick}>Create New Position</button>
-                <button onClick={onClick}>Print</button>
+                {/* <button onClick={onClick}>Print</button> */}
             </InvoiceContainer>
         }
         </>
     )
 }
 
-export default CreateInvoice
+export default CreateInvoiceRefactor
