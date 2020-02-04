@@ -106,7 +106,7 @@ ipcMain.on('initialize-customers', (event, arg) => {
 });
 
 
-ipcMain.on('update', (event, arg) => {
+ipcMain.on('update-customer', (event, arg) => {
   console.log('printi: ', arg);
   db.serialize(() => {
     db.run(arg[0], arg[1], (err) => {
@@ -120,12 +120,12 @@ ipcMain.on('update', (event, arg) => {
       }
       console.log(rows);
       //results are send to the renderer, but not the event emitter
-      mainWindow.webContents.send( 'asynchronous-reply', rows );
+      mainWindow.webContents.send( 'customers-initialized', rows );
     });
   })
 })
 
-ipcMain.on('delete', (event, arg) => {
+ipcMain.on('delete-customer', (event, arg) => {
   console.log('printi: ', arg);
   db.serialize(() => {
     db.run(arg[0], arg[1], (err) => {
@@ -139,7 +139,7 @@ ipcMain.on('delete', (event, arg) => {
       }
       //console.log(rows);
       //results are send to the renderer, but not the event emitter
-      mainWindow.webContents.send( 'asynchronous-reply', rows );
+      mainWindow.webContents.send( 'customers-initialized', rows );
     });
   })
 })

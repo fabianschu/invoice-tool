@@ -73,13 +73,13 @@ const CustomerDetails = (props) => {
         //if event type is blur, the main process is asked to update the db, it will then query the db again and send the result to the ipcRenderer (but not the event emitter)
         if(event.type === 'blur') {
             let stateId = Number(event.target.getAttribute('stateid'));
-            ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, stateId]]);
+            ipcRenderer.send('update-customer', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, stateId]]);
         }
     }
 
     const handleSelect = event => {
         let stateId = Number(event.target.getAttribute('stateid'));
-        ipcRenderer.send('update', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, stateId]]);
+        ipcRenderer.send('update-customer', [`UPDATE customers SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, stateId]]);
     }
 
     const handleDeletion = event => {
@@ -90,8 +90,9 @@ const CustomerDetails = (props) => {
             setShowAlert(false);
         }
         else {
+            //let customerId = (Number(event.target.getAttribute('stateid')));
+            ipcRenderer.send('delete-customer', [`DELETE FROM customers WHERE id=?`, props.selectedCustomer]);
             props.setSelectedCustomer('');
-            ipcRenderer.send('delete', [`DELETE FROM customers WHERE id=?`, [Number(event.target.stateid)]]);
         }
     }
     
@@ -158,7 +159,7 @@ const CustomerDetails = (props) => {
                         <div onClick={handleDeletion} name='initialDelete'>Delete Customer</div>
                         : 
                         <div>
-                            <div onClick={handleDeletion} id={id} name='confirmDelete'>Confirm</div>
+                            <div onClick={handleDeletion} stateid={id} name='confirmDelete'>Confirm</div>
                             <div onClick={handleDeletion} name='cancelDelete'>Cancel</div>
                         </div>
                         }

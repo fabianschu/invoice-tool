@@ -6,14 +6,28 @@ const Position = (props) => {
     // console.log(props.selectedCustomer);
 
     const [project, setProject] = useState('');
+    const [description, setDescription] = useState('');
+    const [hours, setHours] = useState('');
 
     useEffect(() => {
         setProject(props.details.project);
+        setDescription(props.details.description);
+        setHours(props.details.hours);
     }, [])
 
     const handleChange = (event) => {
         if(event.type === 'change') {
-            setProject(event.target.value);
+            switch(event.target.name) {
+                case 'project':
+                    setProject(event.target.value);
+                    break;
+                case 'description':
+                    setDescription(event.target.value);
+                    break;
+                case 'hours':
+                    setHours(event.target.value);
+                    break;
+            }
         }
 
         if(event.type === 'blur') {
@@ -37,9 +51,11 @@ const Position = (props) => {
                 <td>
                     <input type="text" value={project} onChange={handleChange} onBlur={handleChange} name='project'/>
                 </td>
-                <td>{props.details.hours}
+                <td>
+                    <input type="text" value={description} onChange={handleChange} onBlur={handleChange} name='description'/>
                 </td>
-                <td>{props.details.price}
+                <td>
+                    <input type="text" value={hours} onChange={handleChange} onBlur={handleChange} name='hours'/>
                 </td>
             </tr>
         </tbody>

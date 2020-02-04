@@ -23,9 +23,7 @@ function App() {
   const [specialView, setSpecialView] = useState(false);
 
   useEffect(() => {
-    console.log("PLACING A BUNCH OF EVENT LISTENERS!!!!!!!!!!!!!!!!!!!!!!!!!");
-    
-    
+
     ipcRenderer.on('customer-created', (event, arg) => { 
       console.log('IPC channel communication - select customer: ', arg);
       let index = arg[arg.length-1].id;
