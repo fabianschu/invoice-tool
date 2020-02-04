@@ -38,6 +38,7 @@ const CustomerDetails = (props) => {
     const [lastName, setLastName] = useState(props.customerDetails.lastName);
     const [firstName, setFirstName] = useState(props.customerDetails.firstName);
     const [country, setCountry] = useState(props.customerDetails.country);
+    const [rate, setRate] = useState(props.customerDetails.rate);
     const [id, setId] = useState(props.customerDetails.id);
     //deletion-related states
     const [showAlert, setShowAlert] = useState(false);
@@ -66,6 +67,9 @@ const CustomerDetails = (props) => {
                     break;
                 case 'country':
                     setCountry(event.target.value);
+                    break;
+                case 'rate':
+                    setRate(event.target.value);
                     break; 
             }
         }
@@ -141,6 +145,11 @@ const CustomerDetails = (props) => {
                             <label htmlFor='city'>City:</label>
                             <input type="text" value={city} onChange={handleChange} name='city' id='city' onBlur={handleChange} stateid={id}/>
                         </div>
+                    </div>
+
+                    {/* <label htmlFor='country'>Country:</label>
+                    <input type="text" value={country} onChange={handleChange} name='country' id='country' onBlur={handleChange} stateid={id}/> */}
+                    <div className="inputColumn">
                         <div className='input'>
                             <label htmlFor='country'>Country:</label>
                             <select name="country" id="country" stateid={id} onChange={handleSelect}>
@@ -148,11 +157,10 @@ const CustomerDetails = (props) => {
                                 {country === 'Österreich' ? <option value='Deutschland'>Deutschland</option> : <option value='Österreich'>Österreich</option>}
                             </select>
                         </div>
-                    </div>
-
-                    {/* <label htmlFor='country'>Country:</label>
-                    <input type="text" value={country} onChange={handleChange} name='country' id='country' onBlur={handleChange} stateid={id}/> */}
-                    <div className="inputColumn">
+                        <div className='input'>
+                            <label htmlFor='rate'>Hourly rate:</label>
+                            <input type="number" value={rate} onChange={handleChange} name='rate' id='rate' onBlur={handleChange} stateid={id}/>
+                        </div>
                         {
                         !showAlert 
                         ?

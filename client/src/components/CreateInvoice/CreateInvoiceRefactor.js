@@ -24,9 +24,7 @@ const CreateInvoiceRefactor = (props) => {
     
     const onClick = event => {
         //if there is no invoice for that customer yet create a new one and create a new position
-        console.log('click on Create New Position')
         if (props.invoicePositions.length === 0 && !props.invoiceId) {
-            console.log('initiate invoice creation');
             let sql = `INSERT INTO invoices(
                 fk_customer, 
                 title1,
@@ -39,8 +37,6 @@ const CreateInvoiceRefactor = (props) => {
             ipcRenderer.send('create-invoice', [sql, data]);
         } else {
             //if there is an invoice already it should be being displayed, just add a position, then
-            console.log('the positions state is not empty. it contains the following value: ', props.invoicePositions);
-            console.log('the following invoiceId is saved as a state: ', props.invoiceId);
             let sql = `INSERT INTO positions(
                 fk_invoice, 
                 project,
@@ -54,10 +50,6 @@ const CreateInvoiceRefactor = (props) => {
             ipcRenderer.send('create-position', [sql, data]);
         }
     }
-
-    console.log('props.selectedCustomer: ', props.selectedCustomer);
-    console.log('props.invoicePositions: ', props.invoicePositions);
-    console.log('props.invoiceId: ', props.invoiceId);
 
     return (
         <>

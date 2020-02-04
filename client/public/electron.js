@@ -60,7 +60,8 @@ db.serialize(() => {
     street TEXT, 
     zip INTEGER, 
     city TEXT, 
-    country TEXT)`);
+    country TEXT,
+    rate INTEGER)`);
   db.run(`CREATE TABLE IF NOT EXISTS positions(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     fk_invoice INTEGER, 

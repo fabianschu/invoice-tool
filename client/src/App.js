@@ -3,7 +3,6 @@ import styled, {ThemeProvider, createGlobalStyle} from 'styled-components';
 import Customers from './components/Customers/Customers';
 import CustomerDetails from './components/CustomerDetails/CustomerDetails';
 import NewCustomer from './components/NewCustomer/NewCustomer';
-import CreateInvoice from './components/CreateInvoice/CreateInvoice';
 import CreateInvoiceRefactor from './components/CreateInvoice/CreateInvoiceRefactor';
 import InvoiceView from './components/InvoiceView';
 
@@ -25,20 +24,17 @@ function App() {
   useEffect(() => {
 
     ipcRenderer.on('customer-created', (event, arg) => { 
-      console.log('IPC channel communication - select customer: ', arg);
       let index = arg[arg.length-1].id;
       setCustomers(arg);
       setSelectedCustomer(index);
     }); 
     
     ipcRenderer.on('customers-initialized', (event, arg) => {
-        console.log('IPC channel communication - NEW ARRAY: ', arg);
         setCustomers(arg);
     });
 
     ipcRenderer.on('invoice-read', (event, arg) => {
       //if an invoice exists, choose latest invoiceId & query positions
-      console.log(arg);
       if(arg.length != 0) {
           let invId = arg[arg.length-1].id;
           let sql = `SELECT ALL * FROM positions WHERE fk_invoice = ?`;
@@ -53,7 +49,6 @@ function App() {
     });
 
     ipcRenderer.on('position-read', (event, arg) => {
-      console.log(arg);
       let invId = arg[0].fk_invoice;
       //if an invoice exists, positions also must exist
       //set positions as state
@@ -61,11 +56,8 @@ function App() {
       setInvoiceId(invId);
     });
     ipcRenderer.on('invoice-created', (event, arg) => {
-      console.log(arg);
       let invoiceData = arg;
-      console.log(invoiceData);
       invoiceData = invoiceData[invoiceData.length - 1];
-      console.log(invoiceData);
       let invId = invoiceData.id;
       //also create new position for this customer with the invoiceId of the last invoice
       let sql = `INSERT INTO positions(
@@ -85,10 +77,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    console.log('resetting listener');
-
     //1. check if invoices exist for customer
-    console.log('props.selectedCustomer has changed and triggered the useEffect. The current customer has id: ', selectedCustomer);
     let sql = `SELECT ALL * FROM invoices WHERE fk_customer = ?`
     let data = selectedCustomer;
     ipcRenderer.send('read-invoice', [sql, data]);
