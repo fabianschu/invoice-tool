@@ -66,7 +66,7 @@ const CreateInvoiceRefactor = (props) => {
                         </tr>
                     </thead>
                     {/* if invoice already has positions render them here */}
-                    {props.invoicePositions.length != 0 && props.invoicePositions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer} id={position.id}/>)}
+                    {props.invoicePositions.length != 0 && props.invoicePositions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer} id={position.id} customers={props.customers}/>)}
                 </table>
                 <button className='new-position' onClick={onClick}>Create New Position</button>
                 {/* <button onClick={onClick}>Print</button> */}

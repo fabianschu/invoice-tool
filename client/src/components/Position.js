@@ -40,7 +40,9 @@ const Position = (props) => {
             ipcRenderer.send('update-position', [`UPDATE positions SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, id]]);
         }
     }
-    
+
+    let hourlyRate = props.customers.find(customer => customer.id === props.selectedCustomer).rate
+
     return (
         <tbody>
             <tr>
@@ -56,6 +58,9 @@ const Position = (props) => {
                 </td>
                 <td>
                     <input type="text" value={hours} onChange={handleChange} onBlur={handleChange} name='hours'/>
+                </td>
+                <td>
+                    <p>{hourlyRate * hours}</p>
                 </td>
             </tr>
         </tbody>

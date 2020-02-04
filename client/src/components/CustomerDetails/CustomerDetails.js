@@ -114,9 +114,6 @@ const CustomerDetails = (props) => {
         }
     })
 
-    console.log(rate);
-    console.log(props.customerDetails.rate);
-    
     return (
         <>
             {props.selectedCustomer &&
