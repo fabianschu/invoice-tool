@@ -109,9 +109,13 @@ const CustomerDetails = (props) => {
             setLastName(props.customerDetails.lastName);
             setFirstName(props.customerDetails.firstName);
             setCountry(props.customerDetails.country);
+            setRate(props.customerDetails.rate);
             setId(props.customerDetails.id);
         }
     })
+
+    console.log(rate);
+    console.log(props.customerDetails.rate);
     
     return (
         <>

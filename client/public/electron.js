@@ -82,15 +82,17 @@ db.serialize(() => {
     street, 
     zip, 
     city, 
-    country) 
-  VALUES (?,?,?,?,?,?,?)`, [
+    country,
+    rate) 
+  VALUES (?,?,?,?,?,?,?,?)`, [
     'Wurst GmbH', 
     'Sparmeister', 
     'Hans', 
     'Knausergasse 7', 
     73213, 
     'Stuttgart', 
-    'Österreich'], (err) => {
+    'Österreich',
+    45], (err) => {
       if (err) {
         return console.log(err.message)
       }

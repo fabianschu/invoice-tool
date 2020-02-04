@@ -57,7 +57,7 @@ const Customers = (props) => {
     return (
         <div>
         <TopLeft className='create-customer' onClick={handleNewCustomer}>
-            <p>{props.x}</p>     
+            Create New Customer   
         </TopLeft>
         <StyledCustomers>
             <ul className='customer-list'>

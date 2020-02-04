@@ -12,6 +12,7 @@ const NewCustomer = (props) => {
     const [lastName, setLastName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [country, setCountry] = useState('');
+    const [rate, setRate] = useState('');
     // const [id, setId] = useState('');
     //deletion-related states
     const [showAlert, setShowAlert] = useState(false);
@@ -40,7 +41,10 @@ const NewCustomer = (props) => {
                     break;
                 case 'country':
                     setCountry(event.target.value);
-                    break; 
+                    break;
+                case 'rate':
+                setRate(event.target.value);
+                break;  
             }
         }
     }
@@ -60,15 +64,17 @@ const NewCustomer = (props) => {
             street, 
             zip, 
             city, 
-            country) 
-            VALUES (?,?,?,?,?,?,?)`;
+            country,
+            rate) 
+            VALUES (?,?,?,?,?,?,?,?)`;
         let data = [firm, 
             firstName, 
             lastName, 
             street, 
             zip, 
             city, 
-            country];
+            country,
+            rate];
         ipcRenderer.send('create-customer', [sql, data]);
         // props.setSelectedCustomer('');
     }
@@ -104,6 +110,10 @@ const NewCustomer = (props) => {
                     <tr>
                         <th>Name</th>
                         <td><input type="text" value={lastName} onChange={handleChange} name='lastName' onKeyPress={keypressHandler}/></td>
+                    </tr>
+                    <tr>
+                        <th>Rate</th>
+                        <td><input type="number" value={rate} onChange={handleChange} name='rate' onKeyPress={keypressHandler}/></td>
                     </tr>
                 </tbody>
             </table>
