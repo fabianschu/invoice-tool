@@ -8,11 +8,13 @@ const Position = (props) => {
     const [project, setProject] = useState('');
     const [description, setDescription] = useState('');
     const [hours, setHours] = useState('');
+    const [price, setPrice] = useState('');
 
     useEffect(() => {
         setProject(props.details.project);
         setDescription(props.details.description);
         setHours(props.details.hours);
+        setPrice(props.details.price);
     }, [])
 
     const handleChange = (event) => {
@@ -31,13 +33,14 @@ const Position = (props) => {
         }
 
         if(event.type === 'blur') {
-            //let stateId = Number(event.target.getAttribute('stateid'));
-            // console.log('blur');
-            // console.log(project);
-            // console.log(props.details.id);
-            // console.log(event.target.name);
             let id = props.details.id;
-            ipcRenderer.send('update-position', [`UPDATE positions SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, id]]);
+            console.log(hourlyRate)
+            if(event.target.name != 'hours') {
+                ipcRenderer.send('update-position', [`UPDATE positions SET ${event.target.name} = ? WHERE id = ?`, [event.target.value, id]]);
+            }
+            else if (event.target.name === 'hours'){
+                ipcRenderer.send('update-position', [`UPDATE positions SET hours = ?, price = ? WHERE id = ?`, [event.target.value, hourlyRate * hours, id]]);
+            }
         }
     }
 
@@ -60,7 +63,7 @@ const Position = (props) => {
                     <input type="text" value={hours} onChange={handleChange} onBlur={handleChange} name='hours'/>
                 </td>
                 <td>
-                    <p>{hourlyRate * hours}</p>
+                    {hourlyRate * hours}
                 </td>
             </tr>
         </tbody>

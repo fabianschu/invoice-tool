@@ -67,7 +67,8 @@ db.serialize(() => {
     fk_invoice INTEGER, 
     project TEXT, 
     description TEXT, 
-    hours TEXT)`);
+    hours TEXT,
+    price INTEGER)`);
   db.run(`CREATE TABLE IF NOT EXISTS invoices(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     fk_customer INTEGER, 
