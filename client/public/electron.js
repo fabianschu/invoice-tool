@@ -297,7 +297,9 @@ ipcMain.on('delete-position', (event, arg) => {
 
 
 ipcMain.on('print', (event, arg) => {
-    mainWindow.webContents.printToPDF({})
+    mainWindow.webContents.printToPDF({
+      printBackground: true
+    })
           .then(data => {
             //console.log(data);
             fs.writeFile('./print.pdf', data, (error) => {

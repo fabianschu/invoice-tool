@@ -50,7 +50,6 @@ const Position = (props) => {
 
     let hourlyRate = props.customers.find(customer => customer.id === props.selectedCustomer).rate;
 
-    console.log(props)
 
     return (
         <tbody>

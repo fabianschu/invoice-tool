@@ -1,6 +1,17 @@
 import React, {useState} from 'react';
+import PDFPosition from './PDFPosition';
+import styled from 'styled-components';
+import StyledInvoiceTable from '../styles/StyledInvoiceTable';
 const { ipcRenderer } = window.require('electron');
 
+const StyledPdfLayout = styled.div`
+    width: 18cm;
+    height: 28.5cm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
 
 const InvoiceView = (props) => {
 
@@ -13,19 +24,35 @@ const InvoiceView = (props) => {
     }
 
     const backHandler = event => {
-        props.setSpecialView(false);
+        props.setPrintView(false);
     }
 
+    console.log(props);
+
     return (
-        <div>
-            kukuluku
+        <>
+            <StyledPdfLayout>
+                <StyledInvoiceTable>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Projekt</th>
+                                <th>Leistung</th>
+                                <th>Stunden</th>
+                                <th>Preis</th>
+                            </tr>
+                        </thead>
+                        {props.invoicePositions.length != 0 && props.invoicePositions.map(position => <PDFPosition details={position} key={position.id} selectedCustomer={props.selectedCustomer} customers={props.customers}/>)}
+                    </table>
+                </StyledInvoiceTable>
+            </StyledPdfLayout>
             {buttonsDisplay &&
             <>
                 <button onClick={backHandler}>Back</button>
                 <button onClick={printHandler}>Print</button>
             </>
             }   
-        </div>
+        </>
     )
 }
 

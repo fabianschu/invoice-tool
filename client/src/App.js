@@ -18,8 +18,7 @@ function App() {
   const [customers, setCustomers] = useState([]);
   const [invoicePositions, setInvoicePositions] = useState([]);
   const [invoiceId, setInvoiceId] = useState();
-  const [showAccounts, setShowAccounts] = useState('');
-  const [specialView, setSpecialView] = useState(false);
+  const [printView, setPrintView] = useState(false);
 
   useEffect(() => {
 
@@ -112,7 +111,7 @@ function App() {
 
   return (
     <>
-    {!specialView &&
+    {!printView &&
       <>
       <GlobalStyle/>
       <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} x='xx'/>
@@ -130,14 +129,14 @@ function App() {
         :
         <>
           <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
-          <CreateInvoiceRefactor setSpecialView={setSpecialView} selectedCustomer={selectedCustomer} invoicePositions={invoicePositions} setInvoicePositions={setInvoicePositions} invoiceId={invoiceId} setInvoiceId={setInvoiceId} customers={customers}/>
+          <CreateInvoiceRefactor setPrintView={setPrintView} selectedCustomer={selectedCustomer} invoicePositions={invoicePositions} setInvoicePositions={setInvoicePositions} invoiceId={invoiceId} setInvoiceId={setInvoiceId} customers={customers}/>
         </>
       }
       </PageLayout>
       </>
     }
-    {specialView && 
-      <InvoiceView setSpecialView={setSpecialView}/>
+    {printView && 
+      <InvoiceView setPrintView={setPrintView} customers={customers} invoicePositions={invoicePositions} selectedCustomer={selectedCustomer}/>
     }
     </>
   );
