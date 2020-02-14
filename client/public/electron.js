@@ -275,6 +275,26 @@ ipcMain.on('read-invoice', (event, arg) => {
   // })
 })
 
+ipcMain.on('delete-position', (event, arg) => {
+
+  db.serialize(() => {
+    const {position_id, invoice_id} = arg[1];
+    db.run('DELETE FROM positions WHERE id=?', position_id, (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+    });
+    //check positions of that specific invoice
+    db.all(`SELECT ALL * FROM positions WHERE fk_invoice = ?`, invoice_id, (err, rows) => {
+      if (err) {
+          throw err;
+      }
+      console.log('positions read: ', rows);
+      mainWindow.webContents.send( 'position-read', rows );
+    });
+  })
+})
+
 
 ipcMain.on('print', (event, arg) => {
     mainWindow.webContents.printToPDF({})

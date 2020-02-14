@@ -44,7 +44,13 @@ const Position = (props) => {
         }
     }
 
-    let hourlyRate = props.customers.find(customer => customer.id === props.selectedCustomer).rate
+    const handleClick = (event) => {
+        ipcRenderer.send('delete-position', [`DELETE FROM positions WHERE id=?`, {position_id: props.details.id, invoice_id: props.details.fk_invoice}]);
+    }
+
+    let hourlyRate = props.customers.find(customer => customer.id === props.selectedCustomer).rate;
+
+    console.log(props)
 
     return (
         <tbody>
@@ -64,6 +70,9 @@ const Position = (props) => {
                 </td>
                 <td>
                     {hourlyRate * hours}
+                </td>
+                <td>
+                    <button onClick={handleClick}>Delete</button>
                 </td>
             </tr>
         </tbody>

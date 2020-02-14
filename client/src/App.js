@@ -49,6 +49,7 @@ function App() {
     });
 
     ipcRenderer.on('position-read', (event, arg) => {
+      console.log('position-read: ', arg)
       let invId = arg[0].fk_invoice;
       //if an invoice exists, positions also must exist
       //set positions as state
