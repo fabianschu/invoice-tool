@@ -35,12 +35,31 @@ const CreateInvoiceRefactor = (props) => {
         }
     }
 
+    const handleNewInvoice = event => {
+            let sql = `INSERT INTO invoices(
+                fk_customer, 
+                title1,
+                title2,
+                invoiceNumber)
+                VALUES (?,?,?,?)`;
+            let data = [props.selectedCustomer, 
+                '', 
+                ''];
+            ipcRenderer.send('create-invoice', [sql, data]);
+    }
+
     const handlePrintView = (event) =>{
         props.setPrintView(true);
     }
 
     return (
         <>
+        <button>See all invoices of this customer</button>
+        <button onClick={handleNewInvoice}>Create New Invoice</button>
+        <select name="status" id="status">
+            <option value="open">Open</option>
+            <option value="paid">Paid</option>
+        </select>
         {
             <StyledInvoiceTable>
                 <h1>Invoice</h1>
@@ -54,7 +73,7 @@ const CreateInvoiceRefactor = (props) => {
                         </tr>
                     </thead>
                     {/* if invoice already has positions render them here */}
-                    {props.invoicePositions.length != 0 && props.invoicePositions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer} customers={props.customers}/>)}
+                    {props.invoicePositions.length !== 0 && props.invoicePositions.map(position => <Position details={position} key={position.id} selectedCustomer={props.selectedCustomer} customers={props.customers}/>)}
                 </table>
                 <button className='new-position' onClick={handleNewPosition}>Create New Position</button>
                 <button onClick={handlePrintView}>Print</button>

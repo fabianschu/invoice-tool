@@ -27,7 +27,7 @@ const StyledCustomers = styled.div`
     * {
         color: black;
     }
-    li {
+    li {
         text-align: center;
         width: 100%;
         background-color: blue;

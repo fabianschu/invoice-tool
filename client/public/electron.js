@@ -74,7 +74,8 @@ db.serialize(() => {
     fk_customer INTEGER, 
     title1 TEXT,
     title2 TEXT,
-    invoiceNumber INTEGER
+    invoiceNumber INTEGER,
+    paid INTEGER DEFAULT 0
     )`);
   db.run(`INSERT INTO customers(
     firm, 
