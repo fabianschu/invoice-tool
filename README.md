@@ -8,3 +8,19 @@ Many freelancers manage their customer accounts with spreadsheets and use separa
 - React
 - Electron
 - SQLite
+
+## Getting started
+
+Within the client directory:
+
+-> Install dependencies:
+
+**npm install**
+
+-> start development server:
+
+**npm start**
+
+-> start electron:
+
+**npm run electron-start**
