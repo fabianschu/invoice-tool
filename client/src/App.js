@@ -19,10 +19,9 @@ function App() {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [customers, setCustomers] = useState([]);
   const [invoicePositions, setInvoicePositions] = useState([]);
-  const [invoices, setInvoices] = useState();
+  const [invoices, setInvoices] = useState([]);
   const [invoiceId, setInvoiceId] = useState();
   const [printView, setPrintView] = useState(false);
-  const [invoiceListView, setInvoiceListView] = useState(true);
 
   useEffect(() => {
 
@@ -38,20 +37,21 @@ function App() {
 
 
     ipcRenderer.on('invoice-read-one', (event, arg) => {
+      console.log('invoice read one: ', arg);
       //if an invoice exists, choose latest invoiceId & query positions
       if(arg.length > 0) {
           //TODO set invoices state
-          let invId = arg[arg.length-1].id;
+          let lastInv = arg[arg.length-1];
           let sql = `SELECT ALL * FROM positions WHERE fk_invoice = ?`;
-          let data = invId;
+          let data = lastInv.id;
           //check positions of that specific invoice
-          setInvoices(arg);
+          setInvoices([lastInv]);
           ipcRenderer.send('read-position', [sql, data]);
 
       }
       else {
           //TODO set invoices state
-          setInvoices();
+          setInvoices([]);
           setInvoicePositions([]);
           setInvoiceId();
       }
@@ -71,7 +71,7 @@ function App() {
       }
       else {
           //TODO set invoices state
-          setInvoices();
+          setInvoices([]);
           setInvoicePositions([]);
           setInvoiceId();
       }
@@ -118,18 +118,31 @@ function App() {
     if (selectedCustomer !== '' && selectedCustomer !== 'new'){
       let sql = `SELECT ALL * FROM invoices WHERE fk_customer = ? ORDER BY invoiceNumber DESC`;
       let data = [selectedCustomer];
-      if (invoiceListView === false){
+      if (invoices.length === 0){
         ipcRenderer.send('read-one-invoice', [sql, data]);
       }
-      if (invoiceListView === true){
+      if (invoices.length > 0){
         ipcRenderer.send('read-some-invoice', [sql, data]);
       }
     }
-  }, [selectedCustomer, invoiceListView])
+  }, [selectedCustomer])
 
 
   const handleCustomerSelection = (event) => {
     setSelectedCustomer(Number(event.target.id));
+  }
+
+  const handleInvoiceListView = (event) =>{
+    let sql = `SELECT ALL * FROM invoices WHERE fk_customer = ? ORDER BY invoiceNumber DESC`;
+    let data = [selectedCustomer];
+    if(event.target.getAttribute('name') === 'some-invoices') {
+      ipcRenderer.send('read-some-invoice', [sql, data]);
+    }
+    if(event.target.getAttribute('name') === 'one-invoice') {
+      let helperArr = [...invoices];
+      let selectedInv = helperArr.find(el => el.id === Number(event.target.id));
+      setInvoices([selectedInv]);
+    }
   }
 
   const GlobalStyle = createGlobalStyle`
@@ -153,7 +166,6 @@ function App() {
     }
   `
 
-  console.log('invoiceListView before render: ', invoiceListView)
   console.log('selectedCustomer before render: ', selectedCustomer)
   console.log('invoices before render: ', invoices);
 
@@ -167,17 +179,21 @@ function App() {
   //   )
   // }
 
-  if(invoices && (selectedCustomer === '' && invoiceListView === true)) {
+  if((invoices.length > 0) && (selectedCustomer === '') ) {
     return(
       <>
         <GlobalStyle/>
-        <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} setInvoices={setInvoices}/>
+        <Customers 
+          setSelectedCustomer={setSelectedCustomer} 
+          customers={customers} 
+          setInvoices={setInvoices} 
+          invoices={invoices}/>
         <PageLayout>
           <Stats />
-          {/* <InvoicesList 
-          invoices={invoices}
-          setInvoices={setInvoices}
-          setInvoiceListView={setInvoiceListView}/> */}
+          <InvoicesList 
+            invoices={invoices}
+            setInvoices={setInvoices}
+          />
         </PageLayout>
       </>
     )
@@ -187,21 +203,32 @@ function App() {
     return(
       <>
         <GlobalStyle/>
-        <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} setInvoices={setInvoices}/>
+        <Customers 
+          setSelectedCustomer={setSelectedCustomer} 
+          customers={customers} 
+          setInvoices={setInvoices} />
         <PageLayout>
-          <NewCustomer setSelectedCustomer={setSelectedCustomer}/>
+          <NewCustomer 
+            setSelectedCustomer={setSelectedCustomer}/>
         </PageLayout>
       </>
     )
   }
 
-  if((selectedCustomer !== 'new' && selectedCustomer !== '') && invoiceListView === false) {
+  if((selectedCustomer !== 'new' && selectedCustomer !== '') && invoices.length <= 1) {
+    console.log('should render customer details and details of one invoice')
     return(
       <>
         <GlobalStyle/>
-        <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} setInvoices={setInvoices}/>
+        <Customers 
+          setSelectedCustomer={setSelectedCustomer} 
+          customers={customers} 
+          setInvoices={setInvoices} />
         <PageLayout>
-          <CustomerDetails customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer}/>
+          <CustomerDetails 
+            customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  
+            selectedCustomer={selectedCustomer} 
+            setSelectedCustomer={setSelectedCustomer}/>
           <CreateInvoiceRefactor 
             setPrintView={setPrintView} 
             selectedCustomer={selectedCustomer} 
@@ -210,18 +237,24 @@ function App() {
             invoiceId={invoiceId} 
             setInvoiceId={setInvoiceId} 
             customers={customers} 
-            setInvoiceListView={setInvoiceListView}
-            invoices={invoices}/>
+            invoices={invoices}
+            setInvoices={setInvoices}
+            handleInvoiceListView={handleInvoiceListView}/>
         </PageLayout>
       </>
     )
   }
 
-  if((selectedCustomer !== 'new' && selectedCustomer !== '') && invoiceListView === true) {
+  if((selectedCustomer !== 'new' && selectedCustomer !== '') && invoices.length > 1) {
+    console.log('should render customer details and list of invoices for customer')
     return(
       <>
         <GlobalStyle/>
-        <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} setInvoices={setInvoices}/>
+        <Customers 
+          setSelectedCustomer={setSelectedCustomer} 
+          customers={customers} 
+          setInvoices={setInvoices} 
+          setInvoices={setInvoices}/>
         <PageLayout>
           <CustomerDetails 
             customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  
@@ -230,14 +263,21 @@ function App() {
           <InvoicesList 
           invoices={invoices}
           setInvoices={setInvoices}
-          setInvoiceListView={setInvoiceListView}/>
+          handleInvoiceListView={handleInvoiceListView}
+          />
         </PageLayout>
       </>
     )
   }
 
+  console.log('Fledermausland')
   return(
     <>
+      <GlobalStyle/>
+      <Customers 
+          setSelectedCustomer={setSelectedCustomer} 
+          customers={customers} 
+          setInvoices={setInvoices} />
     </>
   )
 

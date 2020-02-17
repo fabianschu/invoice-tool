@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import InvoiceRow from './InvoiceRow'
 
 const InvoicesList = (props) => {
 
@@ -7,15 +6,7 @@ const InvoicesList = (props) => {
 
     })
 
-    let helpArray = props.invoices.map(obj=> ({ 
-        ...obj, 
-        setInvoices: props.setInvoices, 
-        setInvoiceListView: props.setInvoiceListView 
-    }));
-
-
-    console.log(helpArray);
-
+    console.log(props);
     return (
         <>
         <table>
@@ -28,10 +19,17 @@ const InvoicesList = (props) => {
                 </tr>
             </thead>
             <tbody>
-                {helpArray.map(invoice => <InvoiceRow 
-                details={invoice}
-                key={invoice.id}
-                />)}
+                {props.invoices.map(invoice => {
+                    return(
+                        <tr onClick={props.handleInvoiceListView} name='one-invoice'>
+                            <td id={invoice.id} name='one-invoice'>{invoice.title1} </td>
+                            <td id={invoice.id} name='one-invoice'>xy gmbh</td>
+                            <td id={invoice.id} name='one-invoice'>TODO: Sum</td>
+                            {invoice.paid === 0 ? <td id={invoice.id} name='one-invoice'>Open</td> : <td id={invoice.id} name='one-invoice'>Paid</td>}                  
+                        </tr>
+                    )
+                    }
+                )}
             </tbody>
         </table>
         </>

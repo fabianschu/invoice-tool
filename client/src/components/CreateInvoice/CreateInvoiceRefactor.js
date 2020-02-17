@@ -52,17 +52,13 @@ const CreateInvoiceRefactor = (props) => {
         props.setPrintView(true);
     }
 
-    const handleInvoiceListView = (event) =>{
-        props.setInvoiceListView(true)
-    }
-
     console.log(props);
 
     return (
         <>
-        <button onClick={handleInvoiceListView}>See all invoices of this customer</button>
+        <button onClick={props.handleInvoiceListView} name='some-invoices'>See all invoices of this customer</button>
         <button onClick={handleNewInvoice}>Create New Invoice</button>
-        {props.invoices &&
+        {props.invoices.length === 1 &&
             <StyledInvoiceTable>
                 <h1>Invoice</h1>
                 <h2>Invoice #:  {props.invoices[0].invoiceNumber}</h2>
@@ -73,7 +69,7 @@ const CreateInvoiceRefactor = (props) => {
                 </select>
                 <input type="text"/>
                 <input type="text"/>
-                
+
                 <table>
                     <thead>
                         <tr>
