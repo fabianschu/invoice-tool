@@ -205,7 +205,10 @@ function App() {
             customerDetails={customers.find(el => el.id === Number(selectedCustomer))}  
             selectedCustomer={selectedCustomer} 
             setSelectedCustomer={setSelectedCustomer}/>
-          <InvoicesList invoices={invoices}/>
+          <InvoicesList 
+          invoices={invoices}
+          setInvoices={setInvoices}
+          setInvoiceListView={setInvoiceListView}/>
         </PageLayout>
       </>
     )

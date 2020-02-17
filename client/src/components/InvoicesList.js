@@ -7,7 +7,14 @@ const InvoicesList = (props) => {
 
     })
 
-    console.log(props.invoices);
+    let helpArray = props.invoices.map(obj=> ({ 
+        ...obj, 
+        setInvoices: props.setInvoices, 
+        setInvoiceListView: props.setInvoiceListView 
+    }));
+
+
+    console.log(helpArray);
 
     return (
         <>
@@ -21,7 +28,10 @@ const InvoicesList = (props) => {
                 </tr>
             </thead>
             <tbody>
-                {props.invoices.map(invoice => <InvoiceRow details={invoice} />)}
+                {helpArray.map(invoice => <InvoiceRow 
+                details={invoice}
+                key={invoice.id}
+                />)}
             </tbody>
         </table>
         </>
