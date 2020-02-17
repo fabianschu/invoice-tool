@@ -202,6 +202,7 @@ ipcMain.on('create-invoice', (event, arg) => {
       console.log('querying');
       console.log('providing invoices: ', rows);
       event.reply('invoice-created', rows);
+      mainWindow.webContents.send( 'invoice-read-one', rows );
     });
   })
 });
@@ -257,22 +258,30 @@ ipcMain.on('update-position', (event, arg) => {
   })
 })
 
-ipcMain.on('read-invoice', (event, arg) => {
-  console.log('read-invoice: ',arg);
-  // let id = arg[1][1];
-  // db.serialize(() => {
-  //   db.run(arg[0], arg[1], (err) => {
-  //     if (err) {
-  //       return console.error(err.message);
-  //     }
-  //   });
-    db.all(arg[0], arg[1], (err, rows) => {
-      if (err) {
-          throw err;
-      }
-      console.log('read-invoice: ', rows);
-      mainWindow.webContents.send( 'invoice-read', rows );
-    });
+ipcMain.on('read-one-invoice', (event, arg) => {
+  console.log('read-one-invoice input: ',arg);
+  db.all(arg[0], arg[1], (err, rows) => {
+    if (err) {
+        throw err;
+    }
+    let result = [];
+    if (rows.length > 0) {
+      result.push(rows[0]);
+    }
+    console.log('read-one-invoice output: ', result);
+    mainWindow.webContents.send( 'invoice-read-one', result );
+  });
+})
+
+ipcMain.on('read-some-invoice', (event, arg) => {
+  console.log('read-some-invoice input: ',arg);
+  db.all(arg[0], arg[1], (err, rows) => {
+    if (err) {
+        throw err;
+    }
+    console.log('read-some-invoice output: ', rows)
+    mainWindow.webContents.send( 'invoice-read-some', rows );
+  });
   // })
 })
 

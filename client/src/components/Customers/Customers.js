@@ -52,6 +52,7 @@ const Customers = (props) => {
 
     const handleNewCustomer  = event => {
         props.setSelectedCustomer('new');
+        props.setInvoices();
     }
 
     return (

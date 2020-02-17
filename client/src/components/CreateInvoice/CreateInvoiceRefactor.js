@@ -52,17 +52,28 @@ const CreateInvoiceRefactor = (props) => {
         props.setPrintView(true);
     }
 
+    const handleInvoiceListView = (event) =>{
+        props.setInvoiceListView(true)
+    }
+
+    console.log(props);
+
     return (
         <>
-        <button>See all invoices of this customer</button>
+        <button onClick={handleInvoiceListView}>See all invoices of this customer</button>
         <button onClick={handleNewInvoice}>Create New Invoice</button>
-        <select name="status" id="status">
-            <option value="open">Open</option>
-            <option value="paid">Paid</option>
-        </select>
-        {
+        {props.invoices &&
             <StyledInvoiceTable>
                 <h1>Invoice</h1>
+                <h2>Invoice #:  {props.invoices[0].invoiceNumber}</h2>
+                {/* TODO: */}
+                <select name="status" id="status">
+                    <option value="open">Open</option>
+                    <option value="paid">Paid</option>
+                </select>
+                <input type="text"/>
+                <input type="text"/>
+                
                 <table>
                     <thead>
                         <tr>
