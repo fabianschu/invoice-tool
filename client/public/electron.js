@@ -282,7 +282,17 @@ ipcMain.on('read-some-invoice', (event, arg) => {
     console.log('read-some-invoice output: ', rows)
     mainWindow.webContents.send( 'invoice-read-some', rows );
   });
-  // })
+})
+
+ipcMain.on('read-all-invoice', (event, arg) => {
+  console.log('read-all-invoice input: ',arg);
+  db.all(`${arg}`, [], (err, rows) => {
+    if (err) {
+        throw err;
+    }
+    console.log('read-all-invoice output: ', rows)
+    mainWindow.webContents.send( 'invoice-read-some', rows );
+  });
 })
 
 ipcMain.on('delete-position', (event, arg) => {

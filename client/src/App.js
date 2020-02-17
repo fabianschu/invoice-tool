@@ -6,6 +6,7 @@ import NewCustomer from './components/NewCustomer/NewCustomer';
 import CreateInvoiceRefactor from './components/CreateInvoice/CreateInvoiceRefactor';
 import InvoiceView from './components/InvoiceView';
 import InvoicesList from './components/InvoicesList';
+import Stats from './components/Stats';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -21,7 +22,7 @@ function App() {
   const [invoices, setInvoices] = useState();
   const [invoiceId, setInvoiceId] = useState();
   const [printView, setPrintView] = useState(false);
-  const [invoiceListView, setInvoiceListView] = useState(false);
+  const [invoiceListView, setInvoiceListView] = useState(true);
 
   useEffect(() => {
 
@@ -37,7 +38,6 @@ function App() {
 
 
     ipcRenderer.on('invoice-read-one', (event, arg) => {
-      console.log('invoice-read-one: ', arg);
       //if an invoice exists, choose latest invoiceId & query positions
       if(arg.length > 0) {
           //TODO set invoices state
@@ -58,7 +58,6 @@ function App() {
     });
 
     ipcRenderer.on('invoice-read-some', (event, arg) => {
-      console.log('invoice-read-some: ', arg);
       //if an invoice exists, choose latest invoiceId & query positions
       if(arg.length > 0) {
           //TODO set invoices state
@@ -76,6 +75,11 @@ function App() {
           setInvoicePositions([]);
           setInvoiceId();
       }
+    });
+
+    ipcRenderer.on('invoice-read-all', (event, arg) => {
+      console.log('read all invoice: ', arg);
+      setInvoices(arg);
     });
 
     ipcRenderer.on('position-read', (event, arg) => {
@@ -105,6 +109,8 @@ function App() {
     });
     
     ipcRenderer.send('initialize-customers', 'SELECT * FROM customers');
+
+    ipcRenderer.send('read-all-invoice', 'SELECT * FROM invoices ORDER BY invoiceNumber DESC')
   }, [])
 
   useEffect(() => {
@@ -152,11 +158,27 @@ function App() {
   console.log('invoices before render: ', invoices);
 
   
-  if (selectedCustomer === '') {
+  // if (selectedCustomer === '') {
+  //   return(
+  //     <>
+  //       <GlobalStyle/>
+  //       <Customers setSelectedCustomer={setSelectedCustomer} customers={customers}/>
+  //     </>
+  //   )
+  // }
+
+  if(invoices && (selectedCustomer === '' && invoiceListView === true)) {
     return(
       <>
         <GlobalStyle/>
-        <Customers setSelectedCustomer={setSelectedCustomer} customers={customers}/>
+        <Customers setSelectedCustomer={setSelectedCustomer} customers={customers} setInvoices={setInvoices}/>
+        <PageLayout>
+          <Stats />
+          {/* <InvoicesList 
+          invoices={invoices}
+          setInvoices={setInvoices}
+          setInvoiceListView={setInvoiceListView}/> */}
+        </PageLayout>
       </>
     )
   }
@@ -213,6 +235,11 @@ function App() {
       </>
     )
   }
+
+  return(
+    <>
+    </>
+  )
 
   // return (
   //   <>
