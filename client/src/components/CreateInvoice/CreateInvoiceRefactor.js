@@ -52,7 +52,6 @@ const CreateInvoiceRefactor = (props) => {
         props.setPrintView(true);
     }
 
-    console.log(props);
 
     return (
         <>

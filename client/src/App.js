@@ -37,7 +37,6 @@ function App() {
 
 
     ipcRenderer.on('invoice-read-one', (event, arg) => {
-      console.log('invoice read one: ', arg);
       //if an invoice exists, choose latest invoiceId & query positions
       if(arg.length > 0) {
           //TODO set invoices state
@@ -46,6 +45,7 @@ function App() {
           let data = lastInv.id;
           //check positions of that specific invoice
           setInvoices([lastInv]);
+          console.log('suspect 1');
           ipcRenderer.send('read-position', [sql, data]);
 
       }
@@ -66,6 +66,7 @@ function App() {
           let data = invId;
           //check positions of that specific invoice
           setInvoices(arg);
+          console.log('suspect 2');
           ipcRenderer.send('read-position', [sql, data]);
 
       }
@@ -78,12 +79,10 @@ function App() {
     });
 
     ipcRenderer.on('invoice-read-all', (event, arg) => {
-      console.log('read all invoice: ', arg);
       setInvoices(arg);
     });
 
     ipcRenderer.on('position-read', (event, arg) => {
-      console.log('position-read: ', arg)
       let invId = arg[0].fk_invoice;
       //if an invoice exists, positions also must exist
       //set positions as state
@@ -142,6 +141,11 @@ function App() {
       let helperArr = [...invoices];
       let selectedInv = helperArr.find(el => el.id === Number(event.target.id));
       setInvoices([selectedInv]);
+      console.log('suspect 3');
+      console.log(selectedInv);
+      let sql = `SELECT ALL * FROM positions WHERE fk_invoice = ?`;
+      let data = selectedInv.id;
+      ipcRenderer.send('read-position', [sql, data]);
     }
   }
 

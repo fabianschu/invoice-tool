@@ -46,7 +46,6 @@ const StyledCustomers = styled.div`
 const Customers = (props) => {
 
     const handleViewCustomer = event => {
-        console.log('set current customer to: ', Number(event.target.id));
         props.setSelectedCustomer(Number(event.target.id));
         props.setInvoices([]);
     }

@@ -27,8 +27,6 @@ const InvoiceView = (props) => {
         props.setPrintView(false);
     }
 
-    console.log(props);
-
     return (
         <>
             <StyledPdfLayout>

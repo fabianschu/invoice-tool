@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 const { ipcRenderer } = window.require('electron');
 
 const Position = (props) => {
-    // console.log(props.details);
-    // console.log(props.selectedCustomer);
 
     const [project, setProject] = useState('');
     const [description, setDescription] = useState('');

@@ -6,7 +6,6 @@ const InvoicesList = (props) => {
 
     })
 
-    console.log(props);
     return (
         <>
         <table>
